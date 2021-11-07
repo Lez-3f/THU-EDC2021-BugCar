@@ -26,9 +26,13 @@
 
 <https://blog.csdn.net/qq_40833810/article/details/107585306>
 
+需预先准备gcc-arm
+
 ## vscode调试stm32项目(Cortex-M 插件)
 
 <https://blog.csdn.net/qq_40833810/article/details/106713462>
+
+需预先准备OpenOCD
 
 ## 规则和赛事组的资料
 
