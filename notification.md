@@ -33,3 +33,7 @@
 ## 规则和赛事组的资料
 
 <https://cloud.tsinghua.edu.cn/d/1456725a0f3f4c64bb18/>
+
+## git教程
+
+<https://www.liaoxuefeng.com/wiki/896043488029600>
