@@ -49,4 +49,4 @@
 * <https://blog.csdn.net/zhangshuanlai/article/details/104542309>\
 VSCode中的git插件
 
-* 注意gitee编辑代码的流程(文件: `README.md`)
+* 注意gitee使用流程，详见`README.md`
