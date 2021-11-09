@@ -43,7 +43,7 @@
 
 * 进入gitee网页`Pull Requests`部分，将**自己名字的分支**申请pull到**develop分支**
 
-* 进入gitee网页`Pull Requests`部分，检查没有问题后，将刚刚的申请经`审查`、`测试`通过后，正式`合并`
+* 进入gitee网页`Pull Requests`部分，**检查没有问题后**，将刚刚的申请经`审查`、`测试`通过后，正式`合并`
 
 ---
 
