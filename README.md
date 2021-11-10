@@ -14,6 +14,10 @@
 
 详见文件: `NOTIFICATION.md`
 
+* **所有用到的硬件接口(包括RX, TX)都要加USER Label**，命名为pinXXX，调用时用pinXXX_GPIO_Port, pinXXX_Pin
+
+* **尽可能使用define，尽可能保证硬件接口可以随意更换**（因为不知道会不会出现接口冲突），如：#define UART_COMM huart2
+
 ## gitee使用流程
 
 * **经常**仔细阅读gitee网页**develop分支**下`README.md`和`NOTIFICATION.md`新增的内容
