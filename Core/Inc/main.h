@@ -17,9 +17,9 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
+  /* USER CODE END Header */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
+  /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
 
@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
+  /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -51,13 +51,13 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
+  void Error_Handler(void);
 
-/* USER CODE BEGIN EFP */
+  /* USER CODE BEGIN EFP */
 
-/* USER CODE END EFP */
+  /* USER CODE END EFP */
 
-/* Private defines -----------------------------------------------------------*/
+  /* Private defines -----------------------------------------------------------*/
 #define PIDPeriod 5000
 #define PWMPeriod 10800
 #define UnitFreq 100000
@@ -81,7 +81,7 @@ void Error_Handler(void);
 #define pinLBdirP_GPIO_Port GPIOC
 #define pinLBdirN_Pin GPIO_PIN_5
 #define pinLBdirN_GPIO_Port GPIOC
-#define pinEnable_Pin GPIO_PIN_10
+#define pinEnable_Pin GPIO_PIN_2
 #define pinEnable_GPIO_Port GPIOB
 #define pinRBspB_Pin GPIO_PIN_6
 #define pinRBspB_GPIO_Port GPIOC
@@ -99,6 +99,10 @@ void Error_Handler(void);
 #define pinRFpwm_GPIO_Port GPIOA
 #define pinLFpwm_Pin GPIO_PIN_11
 #define pinLFpwm_GPIO_Port GPIOA
+#define pinTX4_Pin GPIO_PIN_10
+#define pinTX4_GPIO_Port GPIOC
+#define pinRX4_Pin GPIO_PIN_11
+#define pinRX4_GPIO_Port GPIOC
 #define pinLED_Pin GPIO_PIN_2
 #define pinLED_GPIO_Port GPIOD
 #define pinLFspA_Pin GPIO_PIN_6
