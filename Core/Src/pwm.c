@@ -48,9 +48,29 @@ inline void outWheelPWM(float pwm, uint32_t Channel, GPIO_TypeDef* P_GPIOx, uint
 }
 
 /**
+ * @brief pwm初始化
+ */
+void pwm_init(void) {
+    // 使能PID中断
+    HAL_TIM_Base_Start_IT(&TIM_PID);
+
+    // 使能PWM输出
+    HAL_TIM_PWM_Start(&TIM_PWM, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&TIM_PWM, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Start(&TIM_PWM, TIM_CHANNEL_3);
+    HAL_TIM_PWM_Start(&TIM_PWM, TIM_CHANNEL_4);
+
+    // 使能编码器
+    HAL_TIM_Encoder_Start(&TIM_LB_SP, TIM_CHANNEL_ALL);
+    HAL_TIM_Encoder_Start(&TIM_LF_SP, TIM_CHANNEL_ALL);
+    HAL_TIM_Encoder_Start(&TIM_RF_SP, TIM_CHANNEL_ALL);
+    HAL_TIM_Encoder_Start(&TIM_RB_SP, TIM_CHANNEL_ALL);
+}
+
+/**
  * @brief PID定时器回调函数
  */
-void TIM_PID_Callback() {
+void TIM_PID_Callback(void) {
     // LB
 #ifdef EnableLB
     {

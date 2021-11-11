@@ -69,6 +69,51 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
     TIM_PID_Callback();
   }
 }
+
+/**
+ * @brief UART的DMA接收完成中断
+ *
+ * @param huart
+ */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
+  if (huart == &UART_GYRO) {
+    gyroMessageRecord();
+  }
+}
+
+/**
+ * @brief 初始化
+ */
+void setup(void) {
+  delay_init();
+  pwm_init();
+  gyro_init(&UART_GYRO);
+}
+
+/**
+ * @brief 主循环
+ */
+void loop(void) {
+  // 检验小端序
+  // HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, findCPUEndian());
+  // delay_ms(400);
+  // HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+  // delay_ms(100);
+
+  if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) == GPIO_PIN_RESET) {
+    HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+  } else {
+    HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
+  }
+  // uprintf(&UART_COMM, "%f %f %f %f ", pidLB.realstate, pidLB.pwm, pidLF.realstate, pidLF.pwm);
+  // uprintf(&UART_COMM, "%f %f %f %f \n", pidRF.realstate, pidRF.pwm, pidRB.realstate, pidRB.pwm);
+
+  // uprintf(&UART_COMM, "%d %d %d %d \n", (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LB_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LF_SP),
+  //   (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RF_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RB_SP));
+
+  uprintf(&UART_COMM, "%f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate);
+  delay_ms(10);
+}
 /* USER CODE END 0 */
 
 /**
@@ -111,45 +156,12 @@ int main(void) {
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  // 初始化
-  delay_init();
-  HAL_TIM_Base_Start_IT(&TIM_PID);// 使能PID中断
-
-  // 使能PWM输出
-  HAL_TIM_PWM_Start(&TIM_PWM, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&TIM_PWM, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&TIM_PWM, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&TIM_PWM, TIM_CHANNEL_4);
-
-  // 使能编码器
-  HAL_TIM_Encoder_Start(&TIM_LB_SP, TIM_CHANNEL_ALL);
-  HAL_TIM_Encoder_Start(&TIM_LF_SP, TIM_CHANNEL_ALL);
-  HAL_TIM_Encoder_Start(&TIM_RF_SP, TIM_CHANNEL_ALL);
-  HAL_TIM_Encoder_Start(&TIM_RB_SP, TIM_CHANNEL_ALL);
+  setup();
   while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-    // 检验小端序
-    // HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, findCPUEndian());
-    // delay_ms(400);
-    // HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
-    // delay_ms(100);
-
-    if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) == GPIO_PIN_RESET) {
-      HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
-    } else {
-      HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
-    }
-    // uprintf(&UART_COMM, "%f %f %f %f ", pidLB.realstate, pidLB.pwm, pidLF.realstate, pidLF.pwm);
-    // uprintf(&UART_COMM, "%f %f %f %f \n", pidRF.realstate, pidRF.pwm, pidRB.realstate, pidRB.pwm);
-
-    // uprintf(&UART_COMM, "%d %d %d %d \n", (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LB_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LF_SP),
-    //   (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RF_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RB_SP));
-
-    uprintf(&UART_COMM, "%f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate);
-    delay_ms(10);
+    loop();
   }
   /* USER CODE END 3 */
 }

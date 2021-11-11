@@ -39,6 +39,7 @@ extern "C" {
 
   /* USER CODE BEGIN Private defines */
 #define UART_COMM huart2
+#define UART_GYRO huart4
 #define MAXSTRBUF 128
 /* USER CODE END Private defines */
 
