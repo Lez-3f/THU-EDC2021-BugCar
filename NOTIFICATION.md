@@ -50,3 +50,5 @@
 VSCode中的git插件
 
 * 注意gitee使用流程，详见`README.md`
+
+## 9. 在中断里用到的全局变量最好使用volatile修饰
