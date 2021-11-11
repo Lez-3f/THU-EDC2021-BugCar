@@ -1,9 +1,10 @@
 #include "pwm.h"
+#include "tim.h"
 
-PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 20 };
-PIDTypeDef pidLF = { 0, 0, 0, 20 };
-PIDTypeDef pidRF = { 0, 0, 0, 20 };
-PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 20 };
+volatile PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 20 };
+volatile PIDTypeDef pidLF = { 0, 0, 0, 20 };
+volatile PIDTypeDef pidRF = { 0, 0, 0, 20 };
+volatile PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 20 };
 
 
 #define EnableLB
@@ -22,7 +23,7 @@ inline float calcSpeed(TIM_HandleTypeDef* htim, float CNT2SP) {
  * @brief 计算输出PWM占空比
  * @return float PWM占空比 [MINPWM, MAXPWM]
  */
-inline float calcPWM(float newstate, PIDTypeDef* instance) {
+inline float calcPWM(float newstate, volatile PIDTypeDef* instance) {
     float err = instance->goalstate - newstate;
     float olderr = instance->goalstate - instance->realstate;
     instance->errint += err * PIDPeriod / UnitFreq;

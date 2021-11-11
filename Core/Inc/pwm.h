@@ -1,6 +1,5 @@
 #ifndef _PWM_H_
 #define _PWM_H_
-#include "tim.h"
 
 #define PI 3.14159265f
 // 四倍频
@@ -32,10 +31,10 @@ typedef struct {
     float errint;
 } PIDTypeDef;
 
-extern PIDTypeDef pidLB;
-extern PIDTypeDef pidLF;
-extern PIDTypeDef pidRF;
-extern PIDTypeDef pidRB;
+extern volatile PIDTypeDef pidLB;
+extern volatile PIDTypeDef pidLF;
+extern volatile PIDTypeDef pidRF;
+extern volatile PIDTypeDef pidRB;
 
 void TIM_PID_Callback();
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt))) 

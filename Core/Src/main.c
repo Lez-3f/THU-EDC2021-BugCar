@@ -25,8 +25,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
 #include "pwm.h"
 #include "gyro.h"
+#include "delay.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,9 +38,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define false 0
-#define true 1
-typedef uint8_t bool;
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
