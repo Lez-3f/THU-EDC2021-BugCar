@@ -109,6 +109,7 @@ void TIM_PID_Callback(void) {
         float newstate = calcSpeed(&TIM_RF_SP, CNT2SP_RF);
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) == GPIO_PIN_RESET) {
             // pidRF.pwm = 0.2;
+
             pidRF.pwm = calcPWM(newstate, &pidRF);
         } else {
             pidRF.pwm = 0;

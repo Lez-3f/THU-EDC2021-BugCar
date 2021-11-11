@@ -19,6 +19,7 @@
   /* USER CODE END Header */
   /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -111,7 +112,8 @@ void loop(void) {
   // uprintf(&UART_COMM, "%d %d %d %d \n", (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LB_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LF_SP),
   //   (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RF_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RB_SP));
 
-  uprintf(&UART_COMM, "%f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate);
+  // uprintf(&UART_COMM, "%f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate);
+  uprintf(&UART_COMM, "%f %f %f \n", gyroAngle.x, gyroAngle.y, gyroAngle.z);
   delay_ms(10);
 }
 /* USER CODE END 0 */
@@ -149,6 +151,7 @@ int main(void) {
   MX_TIM8_Init();
   MX_TIM4_Init();
   MX_USART2_UART_Init();
+  MX_DMA_Init();
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
