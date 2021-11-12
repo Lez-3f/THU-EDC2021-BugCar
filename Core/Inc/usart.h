@@ -16,7 +16,7 @@
   *
   ******************************************************************************
   */
-  /* Define to prevent recursive inclusion -------------------------------------*/
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USART_H__
 #define __USART_H__
 
@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-  /* Includes ------------------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
@@ -34,21 +34,21 @@ extern "C" {
 #include "delay.h"
 /* USER CODE END Includes */
 
-  extern UART_HandleTypeDef huart4;
-  extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart4;
+extern UART_HandleTypeDef huart2;
 
-  /* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN Private defines */
 #define UART_COMM huart2
 #define UART_GYRO huart4
 #define MAXSTRBUF 128
 /* USER CODE END Private defines */
 
-  void MX_UART4_Init(void);
-  void MX_USART2_UART_Init(void);
+void MX_UART4_Init(void);
+void MX_USART2_UART_Init(void);
 
-  /* USER CODE BEGIN Prototypes */
+/* USER CODE BEGIN Prototypes */
   void uprintf(UART_HandleTypeDef* huart, const char* fmt, ...);
-  /* USER CODE END Prototypes */
+/* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }

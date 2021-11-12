@@ -1,17 +1,17 @@
 #include "pwm.h"
 #include "tim.h"
 
-volatile PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 20 };
-volatile PIDTypeDef pidLF = { 0, 0, 0, 20 };
-volatile PIDTypeDef pidRF = { 0, 0, 0, 20 };
-volatile PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 20 };
+PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 20 };
+PIDTypeDef pidLF = { 0.012, 4, 0, 20 };
+PIDTypeDef pidRF = { 0.022, 1, 0.0, 20 };
+PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 20 };
 
 volatile float speedStraight = 0.0;
 
-#define EnableLB
-#define EnableLF
+#define EnableLB 
+// #define EnableLF
 #define EnableRF
-#define EnableRB
+// #define EnableRB
 
 /**
  * @brief 计算速度

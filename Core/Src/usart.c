@@ -17,7 +17,7 @@
   ******************************************************************************
   */
 
-  /* Includes ------------------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------*/
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
@@ -29,7 +29,8 @@ UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_uart4_rx;
 
 /* UART4 init function */
-void MX_UART4_Init(void) {
+void MX_UART4_Init(void)
+{
 
   /* USER CODE BEGIN UART4_Init 0 */
 
@@ -46,7 +47,8 @@ void MX_UART4_Init(void) {
   huart4.Init.Mode = UART_MODE_TX_RX;
   huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart4) != HAL_OK)   {
+  if (HAL_UART_Init(&huart4) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN UART4_Init 2 */
@@ -56,7 +58,8 @@ void MX_UART4_Init(void) {
 }
 /* USART2 init function */
 
-void MX_USART2_UART_Init(void) {
+void MX_USART2_UART_Init(void)
+{
 
   /* USER CODE BEGIN USART2_Init 0 */
 
@@ -73,7 +76,8 @@ void MX_USART2_UART_Init(void) {
   huart2.Init.Mode = UART_MODE_TX_RX;
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart2) != HAL_OK)   {
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
     Error_Handler();
   }
   /* USER CODE BEGIN USART2_Init 2 */
@@ -82,14 +86,16 @@ void MX_USART2_UART_Init(void) {
 
 }
 
-void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle) {
+void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
+{
 
-  GPIO_InitTypeDef GPIO_InitStruct = { 0 };
-  if (uartHandle->Instance == UART4)   {
-    /* USER CODE BEGIN UART4_MspInit 0 */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(uartHandle->Instance==UART4)
+  {
+  /* USER CODE BEGIN UART4_MspInit 0 */
 
-    /* USER CODE END UART4_MspInit 0 */
-      /* UART4 clock enable */
+  /* USER CODE END UART4_MspInit 0 */
+    /* UART4 clock enable */
     __HAL_RCC_UART4_CLK_ENABLE();
 
     __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -128,12 +134,14 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle) {
     HAL_NVIC_EnableIRQ(UART4_IRQn);
     /* USER CODE BEGIN UART4_MspInit 1 */
 
-    /* USER CODE END UART4_MspInit 1 */
-  }   else if (uartHandle->Instance == USART2)   {
-    /* USER CODE BEGIN USART2_MspInit 0 */
+  /* USER CODE END UART4_MspInit 1 */
+  }
+  else if(uartHandle->Instance==USART2)
+  {
+  /* USER CODE BEGIN USART2_MspInit 0 */
 
-    /* USER CODE END USART2_MspInit 0 */
-      /* USART2 clock enable */
+  /* USER CODE END USART2_MspInit 0 */
+    /* USART2 clock enable */
     __HAL_RCC_USART2_CLK_ENABLE();
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -151,26 +159,28 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle) {
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(pinRX2_GPIO_Port, &GPIO_InitStruct);
 
-    /* USER CODE BEGIN USART2_MspInit 1 */
+  /* USER CODE BEGIN USART2_MspInit 1 */
 
-    /* USER CODE END USART2_MspInit 1 */
+  /* USER CODE END USART2_MspInit 1 */
   }
 }
 
-void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle) {
+void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
+{
 
-  if (uartHandle->Instance == UART4)   {
-    /* USER CODE BEGIN UART4_MspDeInit 0 */
+  if(uartHandle->Instance==UART4)
+  {
+  /* USER CODE BEGIN UART4_MspDeInit 0 */
 
-    /* USER CODE END UART4_MspDeInit 0 */
-      /* Peripheral clock disable */
+  /* USER CODE END UART4_MspDeInit 0 */
+    /* Peripheral clock disable */
     __HAL_RCC_UART4_CLK_DISABLE();
 
     /**UART4 GPIO Configuration
     PC10     ------> UART4_TX
     PC11     ------> UART4_RX
     */
-    HAL_GPIO_DeInit(GPIOC, pinTX4_Pin | pinRX4_Pin);
+    HAL_GPIO_DeInit(GPIOC, pinTX4_Pin|pinRX4_Pin);
 
     /* UART4 DMA DeInit */
     HAL_DMA_DeInit(uartHandle->hdmarx);
@@ -179,23 +189,25 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle) {
     HAL_NVIC_DisableIRQ(UART4_IRQn);
     /* USER CODE BEGIN UART4_MspDeInit 1 */
 
-    /* USER CODE END UART4_MspDeInit 1 */
-  }   else if (uartHandle->Instance == USART2)   {
-    /* USER CODE BEGIN USART2_MspDeInit 0 */
+  /* USER CODE END UART4_MspDeInit 1 */
+  }
+  else if(uartHandle->Instance==USART2)
+  {
+  /* USER CODE BEGIN USART2_MspDeInit 0 */
 
-    /* USER CODE END USART2_MspDeInit 0 */
-      /* Peripheral clock disable */
+  /* USER CODE END USART2_MspDeInit 0 */
+    /* Peripheral clock disable */
     __HAL_RCC_USART2_CLK_DISABLE();
 
     /**USART2 GPIO Configuration
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
     */
-    HAL_GPIO_DeInit(GPIOA, pinTX2_Pin | pinRX2_Pin);
+    HAL_GPIO_DeInit(GPIOA, pinTX2_Pin|pinRX2_Pin);
 
-    /* USER CODE BEGIN USART2_MspDeInit 1 */
+  /* USER CODE BEGIN USART2_MspDeInit 1 */
 
-    /* USER CODE END USART2_MspDeInit 1 */
+  /* USER CODE END USART2_MspDeInit 1 */
   }
 }
 
