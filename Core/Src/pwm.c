@@ -6,6 +6,7 @@ volatile PIDTypeDef pidLF = { 0, 0, 0, 20 };
 volatile PIDTypeDef pidRF = { 0, 0, 0, 20 };
 volatile PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 20 };
 
+volatile float speedStraight = 0.0;
 
 #define EnableLB
 #define EnableLF

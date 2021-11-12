@@ -36,6 +36,8 @@ extern volatile PIDTypeDef pidLF;
 extern volatile PIDTypeDef pidRF;
 extern volatile PIDTypeDef pidRB;
 
+extern volatile float speedStraight;
+
 void pwm_init(void);
 void TIM_PID_Callback(void);
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt))) 
