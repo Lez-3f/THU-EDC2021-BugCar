@@ -37,6 +37,24 @@ bool findCPUEndian(void) {
  */
 void gyro_init(UART_HandleTypeDef* huart) {
     gyrohuart = huart;
+}
+
+/**
+ * @brief 陀螺仪初始化(默认配置)
+ * @param huart 串口
+ */
+void gyro_init_default(UART_HandleTypeDef* huart) {
+    gyro_init(huart);
+    gyroSetBaud(true);
+    gyroSetHorizontal();
+    gyroInitAngle();
+    gyroCalibrate();
+}
+
+/**
+ * @brief 正式启用陀螺仪
+ */
+void gyro_start() {
     HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
 }
 

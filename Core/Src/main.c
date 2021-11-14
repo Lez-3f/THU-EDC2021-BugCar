@@ -88,7 +88,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
 void setup(void) {
   delay_init();
   pwm_init();
-  gyro_init(&UART_GYRO);
+  gyro_init_default(&UART_GYRO);
+  delay_ms(1000);
+  gyro_start();
 }
 
 /**

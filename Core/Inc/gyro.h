@@ -38,6 +38,8 @@ extern volatile float gyroTemperature;           // 储存温度值
 
 bool findCPUEndian(void);   // CPU大小端
 void gyro_init(UART_HandleTypeDef* huart);  // 初始化
+void gyro_init_default(UART_HandleTypeDef* huart);  // 初始化(默认)
+void gyro_start();  // 正式启用
 void gyroMessageRecord(void);   // 实时记录信息，在每次接收完成后更新数据，重新开启中断
 
 void gyroSetBaud(bool Baud115200); // 设置波特率，可选择115200或9600
