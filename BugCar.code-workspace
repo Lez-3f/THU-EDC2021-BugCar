@@ -11,7 +11,9 @@
             "delay.h": "c",
             "pwm.h": "c",
             "tim.h": "c",
-            "main.h": "c"
+            "main.h": "c",
+            "math.h": "c",
+            "cmath": "c"
         },
         "C_Cpp.default.intelliSenseMode": "gcc-arm",
         "files.autoGuessEncoding": true,

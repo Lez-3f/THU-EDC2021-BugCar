@@ -1,11 +1,14 @@
 #include "pwm.h"
 #include "ctrl.h"
 #include "tim.h"
+#include <math.h>
 
 volatile PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 0 };
 volatile PIDTypeDef pidLF = { 0.012, 4, 0, 0 };
 volatile PIDTypeDef pidRF = { 0.010, 2, 0.0, 0 };
 volatile PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 0 };
+
+volatile PIDTypeDef pidAngle = { 0, 0, 0, 0 };
 
 #define EnableLB
 #define EnableLF
@@ -23,8 +26,22 @@ inline float calcWheelSpeed(TIM_HandleTypeDef* htim, float CNT2SP) {
  * @brief 计算输出PWM占空比
  * @return float PWM占空比 [MINPWM, MAXPWM]
  */
-inline float calcPWM(float newstate, volatile PIDTypeDef* instance) {
+float calcPWM(float newstate, volatile PIDTypeDef* instance) {
     float err = instance->goalstate - newstate;
+    float olderr = instance->goalstate - instance->realstate;
+    instance->errint += err * PIDPeriod / UnitFreq;
+    float diff = (err - olderr) / PIDPeriod * UnitFreq;
+    float pid = instance->Kp * (err + instance->Ki * instance->errint + instance->Kd * diff);
+    return constrain(pid, MINPWM, MAXPWM);
+}
+
+/**
+ * @brief 计算角度输出PWM占空比
+ * @return float PWM占空比 [MINPWM, MAXPWM]
+ */
+float calcAnglePWM(float newstate, volatile PIDTypeDef* instance) {
+    float err = instance->goalstate - newstate;
+    err = err - round(err / 360) * 360;// 换算到[-180,180]范围
     float olderr = instance->goalstate - instance->realstate;
     instance->errint += err * PIDPeriod / UnitFreq;
     float diff = (err - olderr) / PIDPeriod * UnitFreq;
