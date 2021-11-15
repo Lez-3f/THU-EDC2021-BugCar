@@ -17,7 +17,7 @@ HeaderFiles#4=F:/Users/whb/Documents/STM32/BugCar/Core/Inc/stm32f1xx_it.h
 HeaderFiles#5=F:/Users/whb/Documents/STM32/BugCar/Core/Inc/stm32f1xx_hal_conf.h
 HeaderFiles#6=F:/Users/whb/Documents/STM32/BugCar/Core/Inc/main.h
 HeaderFolderListSize=1
-HeaderPath#0=C:/Users/86181/Documents/vscode/bugcar/Core/Inc
+HeaderPath#0=F:/Users/whb/Documents/STM32/BugCar/Core/Inc
 HeaderFiles=;
 SourceFileListSize=7
 SourceFiles#0=F:/Users/whb/Documents/STM32/BugCar/Core/Src/gpio.c
@@ -28,6 +28,6 @@ SourceFiles#4=F:/Users/whb/Documents/STM32/BugCar/Core/Src/stm32f1xx_it.c
 SourceFiles#5=F:/Users/whb/Documents/STM32/BugCar/Core/Src/stm32f1xx_hal_msp.c
 SourceFiles#6=F:/Users/whb/Documents/STM32/BugCar/Core/Src/main.c
 SourceFolderListSize=1
-SourcePath#0=C:/Users/86181/Documents/vscode/bugcar/Core/Src
+SourcePath#0=F:/Users/whb/Documents/STM32/BugCar/Core/Src
 SourceFiles=;
 

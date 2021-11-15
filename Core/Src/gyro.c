@@ -2,6 +2,7 @@
  * @brief 本文件为小端序专用
 */
 #include "gyro.h"
+#include "delay.h"
 
 volatile GyroInfoTypeDef gyroAccelerate;  // 储存加速度
 volatile GyroInfoTypeDef gyroVelocity;    // 储存角速度
@@ -124,23 +125,17 @@ void gyroMessageRecord(void) {
         if (sum == gyroReceive.dec.sum) {
             // 校验成功
             gyroDecode();
-        }
-        HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
-    } else {
-        uint8_t i = 1;
-        for (;i < sizeof(gyroReceive);++i) {
-            if (gyroReceive.buf[i] == 0x55) {
-                break;
-            }
-        }
-        if (i == sizeof(gyroReceive)) {
-            // 未找到包头
-            HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
         } else {
-            // 找到包头，修正起始点
-            HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive) - i);
+            // 校验失败后重启DMA
+            delay_ms(3);// 此处需要延时一下，不然会发生错误
+            HAL_UART_DMAStop(gyrohuart);
         }
+    } else {
+        // 校验失败后重启DMA
+        delay_ms(3);// 此处需要延时一下，不然会发生错误
+        HAL_UART_DMAStop(gyrohuart);
     }
+    HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
 }
 
 /**
