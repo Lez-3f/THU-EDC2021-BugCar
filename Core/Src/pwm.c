@@ -3,12 +3,12 @@
 #include "tim.h"
 #include <math.h>
 
-PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 40 };
-PIDTypeDef pidLF = { 0.012, 4, 0, 40 };
-PIDTypeDef pidRF = { 0.0122, 6, 0.009, 40 };
-PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 40 };
+volatile PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 0 };
+volatile PIDTypeDef pidLF = { 0.012, 4, 0, 0 };
+volatile PIDTypeDef pidRF = { 0.0122, 6, 0.009, 0 };
+volatile PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 0 };
 
-volatile PIDTypeDef pidAngle = { 0, 0, 0, 0 };
+volatile PIDTypeDef pidAngle = { 0.06, 0, 0, 0 };
 
 #define EnableLB
 #define EnableLF
@@ -26,7 +26,7 @@ inline float calcWheelSpeed(TIM_HandleTypeDef* htim, float CNT2SP) {
  * @brief 计算输出PWM占空比
  * @return float PWM占空比 [MINPWM, MAXPWM]
  */
-float calcPWM(float newstate, volatile PIDTypeDef* instance) {
+inline float calcPWM(float newstate, volatile PIDTypeDef* instance) {
     float err = instance->goalstate - newstate;
     float olderr = instance->goalstate - instance->realstate;
     instance->errint += err * PIDPeriod / UnitFreq;
@@ -42,6 +42,9 @@ float calcPWM(float newstate, volatile PIDTypeDef* instance) {
 float calcAnglePWM(float newstate, volatile PIDTypeDef* instance) {
     float err = instance->goalstate - newstate;
     err = err - round(err / 360) * 360;// 换算到[-180,180]范围
+    if (err < ANGLE_PRE_DELTA && err > -ANGLE_PRE_DELTA) {
+        anglePrepared = true;
+    }
     float olderr = instance->goalstate - instance->realstate;
     instance->errint += err * PIDPeriod / UnitFreq;
     float diff = (err - olderr) / PIDPeriod * UnitFreq;

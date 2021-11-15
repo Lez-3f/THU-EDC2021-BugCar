@@ -89,7 +89,9 @@ void setup(void) {
   delay_init();
   pwm_init();
   gyro_init_default(&UART_GYRO);
+  HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_SET);
   delay_ms(1000);
+  HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
   gyro_start();
 }
 

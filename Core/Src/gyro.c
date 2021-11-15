@@ -118,15 +118,29 @@ inline void gyroDecode(void) {
 void gyroMessageRecord(void) {
     if (gyroReceive.dec.head == 0x55) {
         uint8_t sum = 0x00;
-        for (int i = 0; i < sizeof(gyroReceive) - 1; ++i) {
+        for (int8_t i = 0; i < sizeof(gyroReceive) - 1; ++i) {
             sum += gyroReceive.buf[i];
         }
         if (sum == gyroReceive.dec.sum) {
             // 校验成功
             gyroDecode();
         }
+        HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
+    } else {
+        uint8_t i = 1;
+        for (;i < sizeof(gyroReceive);++i) {
+            if (gyroReceive.buf[i] == 0x55) {
+                break;
+            }
+        }
+        if (i == sizeof(gyroReceive)) {
+            // 未找到包头
+            HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
+        } else {
+            // 找到包头，修正起始点
+            HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive) - i);
+        }
     }
-    HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
 }
 
 /**

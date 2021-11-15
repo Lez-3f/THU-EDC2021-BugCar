@@ -2,9 +2,11 @@
 #include "pwm.h"
 #include "gyro.h"
 #include "main.h"
-#include <stdbool.h>
 
 volatile float speedStraight = 0.0;
+volatile bool anglePrepared = false;
+
+volatile bool callbackflag = true;
 
 /**
  * @brief 设置直行速度
@@ -21,21 +23,23 @@ void setSpeedStraight(float s) {
 void setAngle(float ag) {
     pidAngle.goalstate = ag;
     pidAngle.errint = 0;
+    anglePrepared = false;
 }
 
 /**
  * @brief 各轮速度获取回调函数
  */
 void CTRL_Callback(void) {
-    static bool flag = true;
     if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
         setSpeedStraight(0);
         setAngle(pidAngle.realstate);
-        flag = true;
-    } else if (flag) {
-        setSpeedStraight(20);
-        // setAngle(pidAngle.realstate + 90);
-        flag = false;
+        callbackflag = true;
+    } else if (callbackflag) {
+        setSpeedStraight(0);
+        setAngle(pidAngle.realstate - 90);
+        callbackflag = false;
+    } else if (anglePrepared) {
+        setSpeedStraight(40);
     }
 
     {
@@ -44,8 +48,8 @@ void CTRL_Callback(void) {
         pidAngle.realstate = newstate;
     }
 
-    pidLB.goalstate = speedStraight - pidAngle.pwm * MAX_ROT_DELTA_SPEED;
-    pidLF.goalstate = speedStraight - pidAngle.pwm * MAX_ROT_DELTA_SPEED;
-    pidRF.goalstate = speedStraight + pidAngle.pwm * MAX_ROT_DELTA_SPEED;
-    pidRB.goalstate = speedStraight + pidAngle.pwm * MAX_ROT_DELTA_SPEED;
+    pidLB.goalstate = speedStraight - pidAngle.pwm * MAX(speedStraight, MIN_ROT_DELTA_SPEED);
+    pidLF.goalstate = speedStraight - pidAngle.pwm * MAX(speedStraight, MIN_ROT_DELTA_SPEED);
+    pidRF.goalstate = speedStraight + pidAngle.pwm * MAX(speedStraight, MIN_ROT_DELTA_SPEED);
+    pidRB.goalstate = speedStraight + pidAngle.pwm * MAX(speedStraight, MIN_ROT_DELTA_SPEED);
 }
