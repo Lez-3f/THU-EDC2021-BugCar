@@ -1,3 +1,8 @@
+# Preference & Build % Log
+.vscode
+build
+*.log
+
 # Prerequisites
 *.d
 

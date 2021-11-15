@@ -1,0 +1,30 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "files.associations": {
+            ".eideignore": "ignore",
+            "usart.h": "c",
+            "delay.h": "c",
+            "pwm.h": "c",
+            "tim.h": "c",
+            "main.h": "c"
+        },
+        "C_Cpp.default.intelliSenseMode": "gcc-arm",
+        "files.autoGuessEncoding": true,
+        "C_Cpp.default.cppStandard": "c++14",
+        "C_Cpp.default.cStandard": "c99",
+        "prettier.tabWidth": 4
+    },
+    "extensions": {
+        "recommendations": [
+            "cl.eide",
+            "hars.cppsnippets",
+            "zixuanwang.linkerscript",
+            "marus25.cortex-debug"
+        ]
+    }
+}
