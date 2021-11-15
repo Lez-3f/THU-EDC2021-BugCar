@@ -3,10 +3,10 @@
 #include "tim.h"
 #include <math.h>
 
-volatile PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 0 };
-volatile PIDTypeDef pidLF = { 0.012, 4, 0, 0 };
-volatile PIDTypeDef pidRF = { 0.010, 2, 0.0, 0 };
-volatile PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 0 };
+PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 40 };
+PIDTypeDef pidLF = { 0.012, 4, 0, 40 };
+PIDTypeDef pidRF = { 0.0122, 6, 0.009, 40 };
+PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 40 };
 
 volatile PIDTypeDef pidAngle = { 0, 0, 0, 0 };
 
