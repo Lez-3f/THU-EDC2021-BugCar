@@ -81,7 +81,7 @@ void Error_Handler(void);
 #define pinLBdirP_GPIO_Port GPIOC
 #define pinLBdirN_Pin GPIO_PIN_5
 #define pinLBdirN_GPIO_Port GPIOC
-#define pinEnable_Pin GPIO_PIN_2
+#define pinEnable_Pin GPIO_PIN_1
 #define pinEnable_GPIO_Port GPIOB
 #define pinRBspB_Pin GPIO_PIN_6
 #define pinRBspB_GPIO_Port GPIOC
