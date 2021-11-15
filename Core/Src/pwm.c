@@ -9,7 +9,7 @@ PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 40 };
 #define EnableLB 
 #define EnableLF
 #define EnableRF
-#define EnableRB
+// #define EnableRB
 
 /**
  * @brief 计算速度
