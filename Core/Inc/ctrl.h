@@ -3,8 +3,9 @@
 
 #include <stdbool.h>
 
-#define MIN_ROT_DELTA_SPEED 30
-#define ANGLE_PRE_DELTA 5
+#define MIN_ROT_DELTA_SPEED 20
+#define ANGLE_PRE_DELTA 3
+#define ANGLE_QUICK_DELTA 10
 
 extern volatile float speedStraight;
 extern volatile bool anglePrepared;

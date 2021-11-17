@@ -1,7 +1,6 @@
 #include "pwm.h"
 #include "ctrl.h"
 #include "tim.h"
-#include <math.h>
 
 volatile PIDTypeDef pidLB = { 0.0120, 4.2, 0.010, 0 };
 volatile PIDTypeDef pidLF = { 0.012, 4, 0, 0 };
@@ -39,12 +38,7 @@ inline float calcPWM(float newstate, volatile PIDTypeDef* instance) {
  * @brief 计算角度输出PWM占空比
  * @return float PWM占空比 [MINPWM, MAXPWM]
  */
-float calcAnglePWM(float newstate, volatile PIDTypeDef* instance) {
-    float err = instance->goalstate - newstate;
-    err = err - round(err / 360) * 360;// 换算到[-180,180]范围
-    if (err < ANGLE_PRE_DELTA && err > -ANGLE_PRE_DELTA) {
-        anglePrepared = true;
-    }
+float calcAnglePWM(float err, volatile PIDTypeDef* instance) {
     float olderr = instance->goalstate - instance->realstate;
     instance->errint += err * PIDPeriod / UnitFreq;
     float diff = (err - olderr) / PIDPeriod * UnitFreq;

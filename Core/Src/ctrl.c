@@ -44,7 +44,17 @@ void CTRL_Callback(void) {
 
     {
         float newstate = gyroAngle.z;
-        pidAngle.pwm = calcAnglePWM(newstate, &pidAngle);
+        float err = pidAngle.goalstate - newstate;
+        err = err - round(err / 360) * 360;// 换算到[-180,180]范围
+        if (err < ANGLE_PRE_DELTA && err > -ANGLE_PRE_DELTA) {
+            anglePrepared = true;
+        }
+
+        pidAngle.pwm = calcAnglePWM(err, &pidAngle);
+        if (err > ANGLE_QUICK_DELTA && err < -ANGLE_QUICK_DELTA) {
+            pidAngle.pwm = err > 0 ? 1 : -1;
+        }
+
         pidAngle.realstate = newstate;
     }
 
