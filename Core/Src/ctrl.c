@@ -2,6 +2,7 @@
 #include "pwm.h"
 #include "gyro.h"
 #include "main.h"
+#include <math.h>
 
 volatile float speedStraight = 0.0;
 volatile bool anglePrepared = false;
