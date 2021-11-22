@@ -4,7 +4,7 @@
 #define PI 3.14159265f
 // 四倍频
 #define CNT2SP_BASE (UnitFreq / PIDPeriod * PI * 6.7)
-#define CNT2SP_AVE (CNT2SP_BASE / 990)
+#define CNT2SP_AVE (CNT2SP_BASE / 1061.25)
 
 #define CNT2SP_LB (CNT2SP_BASE / 1062)
 #define CNT2SP_LF (CNT2SP_BASE / 1062)

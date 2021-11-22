@@ -131,4 +131,6 @@ void TIM_PID_Callback(void) {
 #ifdef EnableRB
     outWheelPWM(pidRB.pwm, TIM_CH_RB_PWM, pinRBdirP_GPIO_Port, pinRBdirP_Pin, pinRBdirN_GPIO_Port, pinRBdirN_Pin);
 #endif
+
+    CTRL_After_Callback();
 }

@@ -8,7 +8,10 @@
 #include <stdbool.h>
 #include "stm32f1xx_hal.h"
 
-#define GYRO_g 9.8   //定义重力加速度值
+// 定义重力加速度值
+#define GYRO_g 9.8
+// 定义初始状态修正后的绝对角度
+#define GYRO_REVISE_BASE 0
 
 typedef struct {
     float x;

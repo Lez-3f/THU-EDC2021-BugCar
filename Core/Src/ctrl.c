@@ -1,54 +1,24 @@
 #include "ctrl.h"
 #include "pwm.h"
 #include "gyro.h"
+#include "usart.h"
 #include "main.h"
-#include <math.h>
 
 volatile float speedStraight = 0.0;
-volatile bool anglePrepared = false;
+volatile bool angleCompleted = false;
 
-volatile bool callbackflag = true;
-
-/**
- * @brief 设置直行速度
- * @param s 直行速度
- */
-void setSpeedStraight(float s) {
-    speedStraight = s;
-    pidLB.errint = 0;
-    pidLF.errint = 0;
-    pidRF.errint = 0;
-    pidRB.errint = 0;
-}
-
-void setAngle(float ag) {
-    pidAngle.goalstate = ag;
-    pidAngle.errint = 0;
-    anglePrepared = false;
-}
+uint8_t testDataBuf[128];
 
 /**
- * @brief 各轮速度获取回调函数
+ * @brief PID计算前回调函数
  */
 void CTRL_Callback(void) {
-    if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
-        setSpeedStraight(0);
-        setAngle(pidAngle.realstate);
-        callbackflag = true;
-    } else if (callbackflag) {
-        setSpeedStraight(0);
-        setAngle(pidAngle.realstate - 90);
-        callbackflag = false;
-    } else if (anglePrepared) {
-        setSpeedStraight(40);
-    }
-
     {
         float newstate = gyroAngle.z;
         float err = pidAngle.goalstate - newstate;
-        err = err - round(err / 360) * 360;// 换算到[-180,180]范围
-        if (err < ANGLE_PRE_DELTA && err > -ANGLE_PRE_DELTA) {
-            anglePrepared = true;
+        err = ANGLE_NORM(err);
+        if (err < ANGLE_COMPLETE_DELTA && err > -ANGLE_COMPLETE_DELTA) {
+            angleCompleted = true;
         }
 
         pidAngle.pwm = calcAnglePWM(err, &pidAngle);
@@ -63,4 +33,85 @@ void CTRL_Callback(void) {
     pidLF.goalstate = speedStraight - pidAngle.pwm * MAX(speedStraight, MIN_ROT_DELTA_SPEED);
     pidRF.goalstate = speedStraight + pidAngle.pwm * MAX(speedStraight, MIN_ROT_DELTA_SPEED);
     pidRB.goalstate = speedStraight + pidAngle.pwm * MAX(speedStraight, MIN_ROT_DELTA_SPEED);
+}
+
+/**
+ * @brief PID计算后回调函数
+ */
+void CTRL_After_Callback(void) {
+    // uprintf(&UART_COMM, "%f %f %f %f ", pidLB.realstate, pidLB.pwm, pidLF.realstate, pidLF.pwm);
+    // uprintf(&UART_COMM, "%f %f %f %f \n", pidRF.realstate, pidRF.pwm, pidRB.realstate, pidRB.pwm);
+
+    // uprintf(&UART_COMM, "%d %d %d %d \n", (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LB_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LF_SP),
+      // (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RF_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RB_SP));
+
+    uprintf_DMA(testDataBuf, &UART_COMM, "%f %f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate, getRealAngle());
+}
+
+/**
+ * @brief 获取设定的直行速度
+ * @return float 设定直行速度
+ */
+float getSpeedStraight() {
+    return speedStraight;
+}
+
+/**
+ * @brief 获取实际的直行速度
+ * @return float 实际直行速度
+ */
+float getRealSpeedStraight() {
+    float sum = 0;
+    sum += pidLB.realstate;
+    sum += pidLF.realstate;
+    sum += pidRF.realstate;
+    sum += pidRB.realstate;
+    return sum / 4;
+}
+
+/**
+ * @brief 设定直行速度
+ * @param s 直行速度
+ */
+void setSpeedStraight(float s) {
+    speedStraight = s;
+    pidLB.errint = 0;
+    pidLF.errint = 0;
+    pidRF.errint = 0;
+    pidRB.errint = 0;
+}
+
+/**
+ * @brief 获取设定的修正绝对角度
+ * @return float 设定修正绝对角度[-180,180]
+ */
+float getAngle() {
+    return ANGLE_NORM(pidAngle.goalstate + GYRO_REVISE_BASE);
+}
+
+/**
+ * @brief 获取实际的修正绝对角度
+ * @return float 实际修正绝对角度[-180,180]
+ */
+float getRealAngle() {
+    return ANGLE_NORM(pidAngle.realstate + GYRO_REVISE_BASE);
+}
+
+/**
+ * @brief 设定修正绝对角度
+ * @param ag 修正绝对角度
+ */
+void setAngle(float ag) {
+    pidAngle.goalstate = ANGLE_NORM(ag - GYRO_REVISE_BASE);
+    pidAngle.errint = 0;
+    angleCompleted = false;
+}
+
+/**
+ * @brief 获取转动完成状态
+ * @return true 转动完成(误差<ANGLE_COMPLETE_DELTA)
+ * @return false 转动未完成
+ */
+bool isAngleCompleted() {
+    return angleCompleted;
 }

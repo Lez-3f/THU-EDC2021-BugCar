@@ -17,9 +17,9 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
+  /* USER CODE END Header */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
+  /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
 
@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
+  /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -51,13 +51,13 @@ extern "C" {
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
+  void Error_Handler(void);
 
-/* USER CODE BEGIN EFP */
+  /* USER CODE BEGIN EFP */
 
-/* USER CODE END EFP */
+  /* USER CODE END EFP */
 
-/* Private defines -----------------------------------------------------------*/
+  /* Private defines -----------------------------------------------------------*/
 #define PIDPeriod 5000
 #define PWMPeriod 10800
 #define UnitFreq 100000
@@ -83,6 +83,10 @@ void Error_Handler(void);
 #define pinLBdirN_GPIO_Port GPIOC
 #define pinEnable_Pin GPIO_PIN_1
 #define pinEnable_GPIO_Port GPIOB
+#define pinTX3_Pin GPIO_PIN_10
+#define pinTX3_GPIO_Port GPIOB
+#define pinRX3_Pin GPIO_PIN_11
+#define pinRX3_GPIO_Port GPIOB
 #define pinRBspB_Pin GPIO_PIN_6
 #define pinRBspB_GPIO_Port GPIOC
 #define pinRBspA_Pin GPIO_PIN_7
