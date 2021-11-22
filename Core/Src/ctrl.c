@@ -109,8 +109,7 @@ void setAngle(float ag) {
 
 /**
  * @brief 获取转动完成状态
- * @return true 转动完成(误差<ANGLE_COMPLETE_DELTA)
- * @return false 转动未完成
+ * @return true 转动完成(误差<ANGLE_COMPLETE_DELTA); false 转动未完成
  */
 bool isAngleCompleted() {
     return angleCompleted;

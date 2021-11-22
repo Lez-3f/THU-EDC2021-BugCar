@@ -123,7 +123,7 @@ void loop(void) {
   } else if (isAngleCompleted()) {
     setSpeedStraight(40);
   }
-  delay_ms(10);
+  delay_ms(50);
 }
 /* USER CODE END 0 */
 
