@@ -58,3 +58,9 @@ VSCode中的git插件
 <https://blog.csdn.net/u014779536/article/details/104369528>
 
 ![png](./assets/10.1.png)
+
+## 11. DMA初始化顺序问题
+
+<https://blog.csdn.net/as480133937/article/details/104827639>
+
+![png](./assets/11.1.png)

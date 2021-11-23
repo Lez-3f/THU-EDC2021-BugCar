@@ -17,7 +17,7 @@
   ******************************************************************************
   */
 
-  /* Includes ------------------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------*/
 #include "dma.h"
 
 /* USER CODE BEGIN 0 */
@@ -35,7 +35,8 @@
 /**
   * Enable DMA controller clock
   */
-void MX_DMA_Init(void) {
+void MX_DMA_Init(void)
+{
 
   /* DMA controller clock enable */
   __HAL_RCC_DMA2_CLK_ENABLE();

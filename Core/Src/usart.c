@@ -189,7 +189,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle) {
     hdma_usart2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_usart2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_usart2_tx.Init.Mode = DMA_NORMAL;
-    hdma_usart2_tx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_usart2_tx.Init.Priority = DMA_PRIORITY_MEDIUM;
     if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK) {
       Error_Handler();
     }
@@ -295,7 +295,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle) {
 
 /* USER CODE BEGIN 1 */
 // huart = &huart1, &huart2, ...
-void uprintf(UART_HandleTypeDef* huart, const char* fmt, ...) {
+HAL_StatusTypeDef uprintf(UART_HandleTypeDef* huart, const char* fmt, ...) {
   uint16_t len;
   va_list ap;
   uint8_t buf[MAXSTRBUF];
@@ -303,17 +303,21 @@ void uprintf(UART_HandleTypeDef* huart, const char* fmt, ...) {
   len = vsprintf((char*)buf, fmt, ap);
   va_end(ap);
   // len = strlen((const char*)buf);
-  HAL_UART_Transmit(huart, buf, len, HAL_MAX_DELAY);
+  return HAL_UART_Transmit(huart, buf, len, HAL_MAX_DELAY);
 }
 
-void uprintf_DMA(uint8_t* buf, UART_HandleTypeDef* huart, const char* fmt, ...) {
-  uint16_t len;
-  va_list ap;
-  va_start(ap, fmt);
-  len = vsprintf((char*)buf, fmt, ap);
-  va_end(ap);
-  // len = strlen((const char*)buf);
-  HAL_UART_Transmit_DMA(huart, buf, len);
+HAL_StatusTypeDef uprintf_DMA(uint8_t* buf, UART_HandleTypeDef* huart, const char* fmt, ...) {
+  if (huart->gState == HAL_UART_STATE_READY) {
+    uint16_t len;
+    va_list ap;
+    va_start(ap, fmt);
+    len = vsprintf((char*)buf, fmt, ap);
+    va_end(ap);
+    // len = strlen((const char*)buf);
+    return HAL_UART_Transmit_DMA(huart, buf, len);
+  } else {
+    return HAL_BUSY;
+  }
 }
 /* USER CODE END 1 */
 

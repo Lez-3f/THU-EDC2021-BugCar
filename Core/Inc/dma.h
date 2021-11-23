@@ -16,7 +16,7 @@
   *
   ******************************************************************************
   */
-  /* Define to prevent recursive inclusion -------------------------------------*/
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __DMA_H__
 #define __DMA_H__
 
@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-  /* Includes ------------------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
 /* DMA memory to memory transfer handles -------------------------------------*/
@@ -37,11 +37,11 @@ extern "C" {
 
 /* USER CODE END Private defines */
 
-  void MX_DMA_Init(void);
+void MX_DMA_Init(void);
 
-  /* USER CODE BEGIN Prototypes */
+/* USER CODE BEGIN Prototypes */
 
-  /* USER CODE END Prototypes */
+/* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
