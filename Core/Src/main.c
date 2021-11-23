@@ -51,7 +51,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-bool callbackflag = true;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -91,7 +91,7 @@ void setup(void) {
   pwm_init();
   gyro_init_default(&UART_GYRO);
   HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_SET);
-  delay_ms(1000);
+  delay_ms(2000);
   HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
   gyro_start();
 }
@@ -112,18 +112,44 @@ void loop(void) {
     HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
   }
 
+  // 状态变量
+  static int16_t state = 0;
+  // 转弯前角度
+  static float angle0 = 0;
+  // 转弯次数
+  static int16_t roundi = 0;
   if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
-    setSpeedStraight(0);
+    setSpeedStraight0();
     setAngle(getRealAngle());
-    callbackflag = true;
-  } else if (callbackflag) {
-    setSpeedStraight(0);
-    setAngle(getRealAngle() - 90);
-    callbackflag = false;
-  } else if (isAngleCompleted()) {
-    setSpeedStraight(40);
+    state = 0;
+  } else {
+    switch (state) {
+    case 0:
+      angle0 = getRealAngle();
+      roundi = 0;
+      ++state;
+    case 1:
+      setSpeedStraight0();
+      setAngle(angle0 - 90 * (roundi + 1));
+      ++state;
+    case 2:
+      if (isAngleCompleted()) {
+        setSpeedStraight(40, 30);
+        ++state;
+      } else {
+        break;
+      }
+    case 3:
+      if (isDisCompleted()) {
+        roundi = (roundi + 1) % 4;
+        state = 1;
+      }
+      break;
+    default:
+      break;
+    }
   }
-  delay_ms(50);
+  delay_ms(20);
 }
 /* USER CODE END 0 */
 

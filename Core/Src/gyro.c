@@ -20,6 +20,8 @@ uint8_t gyroComSetVertical[] = { 0xFF, 0xAA, 0x66 };
 uint8_t gyroComSleepAwake[] = { 0xFF, 0xAA, 0x60 };
 
 UART_HandleTypeDef* gyrohuart;
+// 定义初始状态修正后的绝对角度
+volatile float GYRO_REVISE_BASE = 0;
 
 /**
  * @brief CPU大小端
@@ -127,12 +129,10 @@ void gyroMessageRecord(void) {
             gyroDecode();
         } else {
             // 校验失败后重启DMA
-            delay_ms(3);// 此处需要延时一下，不然会发生错误
             HAL_UART_DMAStop(gyrohuart);
         }
     } else {
         // 校验失败后重启DMA
-        delay_ms(3);// 此处需要延时一下，不然会发生错误
         HAL_UART_DMAStop(gyrohuart);
     }
     HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));

@@ -3,12 +3,15 @@
 #include "gyro.h"
 #include "usart.h"
 #include "main.h"
+#include "tim.h"
 
 volatile float speedStraight = 0.0;
+volatile int32_t cnt4Goal = 0;
+volatile int32_t cnt4Real = 0;
+volatile bool disCompleted = true;
 volatile bool angleCompleted = false;
 
 uint8_t testCount = 0;
-
 #pragma pack(1)
 struct {
     uint8_t head;
@@ -17,6 +20,7 @@ struct {
     float RF;
     float RB;
     float angle;
+    float dis;
 } testDataBuf;
 #pragma pack()
 
@@ -38,6 +42,18 @@ void CTRL_Callback(void) {
         }
 
         pidAngle.realstate = newstate;
+    }
+
+    if (!disCompleted) {
+        cnt4Real += sgn(speedStraight) *
+            ((int32_t)(int16_t)__HAL_TIM_GET_COUNTER(&TIM_LB_SP)
+                + (int32_t)(int16_t)__HAL_TIM_GET_COUNTER(&TIM_LF_SP)
+                + (int32_t)(int16_t)__HAL_TIM_GET_COUNTER(&TIM_RF_SP)
+                + (int32_t)(int16_t)__HAL_TIM_GET_COUNTER(&TIM_RB_SP));
+        if (cnt4Real >= cnt4Goal) {
+            disCompleted = true;
+            setSpeedStraight0();
+        }
     }
 
     pidLB.goalstate = speedStraight - pidAngle.pwm * MAX(speedStraight, MIN_ROT_DELTA_SPEED);
@@ -66,9 +82,11 @@ void CTRL_After_Callback(void) {
             testDataBuf.RF = pidRF.realstate;
             testDataBuf.RB = pidRB.realstate;
             testDataBuf.angle = getRealAngle();
+            testDataBuf.dis = cnt4Real / DIS2CNT4_AVE;
             uwrite_DMA(&UART_COMM, (uint8_t*)&testDataBuf, sizeof(testDataBuf));
+            // uwrite_DMA(&UART_COMM, gyroReceive.buf, sizeof(gyroReceive));
         }
-        
+
         // uprintf_DMA(testDataBuf, &UART_COMM, "%f %f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate, getRealAngle());
     }
 }
@@ -97,13 +115,44 @@ float getRealSpeedStraight() {
 /**
  * @brief 设定直行速度
  * @param s 直行速度
+ * @param dis 直行距离
  */
-void setSpeedStraight(float s) {
-    speedStraight = s;
+void setSpeedStraight(float s, float dis) {
+    dis = constrain(dis, -MAX_DISTANCE, MAX_DISTANCE);
+    if (dis >= 0) {
+        speedStraight = s;
+        cnt4Goal = (int32_t)round(dis * DIS2CNT4_AVE);
+    } else {
+        speedStraight = -s;
+        cnt4Goal = (int32_t)round(-dis * DIS2CNT4_AVE);
+    }
+
+    cnt4Real = 0;
+    disCompleted = false;
     pidLB.errint = 0;
     pidLF.errint = 0;
     pidRF.errint = 0;
     pidRB.errint = 0;
+}
+
+/**
+ * @brief 设定速度为0
+ */
+void setSpeedStraight0() {
+    speedStraight = 0;
+
+    pidLB.errint = 0;
+    pidLF.errint = 0;
+    pidRF.errint = 0;
+    pidRB.errint = 0;
+}
+
+/**
+ * @brief 获取直行完成状态
+ * @return true 完成(或略超出); false 未完成
+ */
+bool isDisCompleted() {
+    return disCompleted;
 }
 
 /**

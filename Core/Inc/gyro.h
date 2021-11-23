@@ -11,7 +11,7 @@
 // 定义重力加速度值
 #define GYRO_g 9.8
 // 定义初始状态修正后的绝对角度
-#define GYRO_REVISE_BASE 0
+extern volatile float GYRO_REVISE_BASE;
 
 typedef struct {
     float x;
@@ -38,6 +38,7 @@ extern volatile GyroInfoTypeDef gyroAccelerate;  // 储存加速度
 extern volatile GyroInfoTypeDef gyroVelocity;    // 储存角速度
 extern volatile GyroInfoTypeDef gyroAngle;       // 储存角度值
 extern volatile float gyroTemperature;           // 储存温度值
+extern GyroMsgTypeDef gyroReceive;
 
 bool findCPUEndian(void);   // CPU大小端
 void gyro_init(UART_HandleTypeDef* huart);  // 初始化

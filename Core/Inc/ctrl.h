@@ -1,9 +1,11 @@
 #ifndef _CTRL_H_
 #define _CTRL_H_
 
+#include "pwm.h"
 #include <stdbool.h>
 #include <math.h>
 
+#define MAX_DISTANCE 600
 #define MIN_ROT_DELTA_SPEED 20
 #define ANGLE_COMPLETE_DELTA 3
 #define ANGLE_QUICK_DELTA 10
@@ -13,7 +15,9 @@ extern volatile bool angleCompleted;
 
 float getSpeedStraight();
 float getRealSpeedStraight();
-void setSpeedStraight(float s);
+void setSpeedStraight(float s, float dis);
+void setSpeedStraight0();
+bool isDisCompleted();
 float getAngle();
 float getRealAngle();
 void setAngle(float ag);
