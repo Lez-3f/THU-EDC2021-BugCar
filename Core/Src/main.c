@@ -52,7 +52,6 @@
 
 /* USER CODE BEGIN PV */
 bool callbackflag = true;
-uint8_t testDataBuf[128];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,7 +123,6 @@ void loop(void) {
   } else if (isAngleCompleted()) {
     setSpeedStraight(40);
   }
-  uprintf_DMA(testDataBuf, &UART_COMM, "%f %f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate, getRealAngle());
   delay_ms(50);
 }
 /* USER CODE END 0 */

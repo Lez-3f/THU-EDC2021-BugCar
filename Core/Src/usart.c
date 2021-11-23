@@ -319,6 +319,14 @@ HAL_StatusTypeDef uprintf_DMA(uint8_t* buf, UART_HandleTypeDef* huart, const cha
     return HAL_BUSY;
   }
 }
+
+HAL_StatusTypeDef uwrite(UART_HandleTypeDef* huart, uint8_t* buf, uint16_t size) {
+  return HAL_UART_Transmit(huart, buf, size, HAL_MAX_DELAY);
+}
+
+HAL_StatusTypeDef uwrite_DMA(UART_HandleTypeDef* huart, uint8_t* buf, uint16_t size) {
+  return HAL_UART_Transmit_DMA(huart, buf, size);
+}
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
