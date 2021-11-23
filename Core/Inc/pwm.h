@@ -16,10 +16,6 @@
 #define MAXPWM 1.0
 // 最小输出PWM占空比
 #define MINPWM -1.0
-// 最大车速
-#define MAXSPEED 50.0
-// 最小车速
-#define MINSPEED -50.0
 
 typedef struct {
     float Kp;
