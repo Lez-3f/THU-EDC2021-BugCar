@@ -38,6 +38,12 @@
 
 <https://cloud.tsinghua.edu.cn/d/1456725a0f3f4c64bb18/>
 
+讲座链接
+STM32 UART串口通信(蓝牙&Zigbee)：https://www.wolai.com/ob1miBxWCHRpH6sTvKoPKC
+小车控制&pwm波输出&pid算法：https://foremost-flax-c3a.notion.site/pwm-pid-10-31-6c060f9cccf64eb1863a669dce676818
+JY62&编码器测距 Nov. 7th：https://pickled-trombone-62d.notion.site/JY62-Nov-7th-ded99b4b315c4a0f918ffc7871cbd6e7
+比赛规则介绍&选手包使用：https://www.wolai.com/mxa73gfwKJ7ZkQjwAmiFGJ
+
 ## 8. git教程
 
 * <https://www.liaoxuefeng.com/wiki/896043488029600>\
