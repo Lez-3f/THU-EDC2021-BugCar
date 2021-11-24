@@ -46,6 +46,7 @@ bool findCPUEndian(void);   // CPU大小端
 void gyro_init(UART_HandleTypeDef* huart);  // 初始化
 void gyro_init_default(UART_HandleTypeDef* huart);  // 初始化(默认)
 void gyro_start(void);  // 正式启用
+void gyro_start_once(void); // 读取1次
 void gyroMessageRecord(void);   // 实时记录信息，在每次接收完成后更新数据，重新开启中断
 void gyroError(void);   // 校验失败处理
 

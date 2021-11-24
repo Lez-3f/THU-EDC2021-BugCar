@@ -36,7 +36,7 @@ extern volatile PIDTypeDef pidAngle;
 
 extern volatile float speedStraight;
 
-void pwm_init(void);
+void pwm_start(void);
 float calcAnglePWM(float err, volatile PIDTypeDef* instance);
 void TIM_PID_Callback(void);
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))

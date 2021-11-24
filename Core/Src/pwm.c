@@ -64,7 +64,7 @@ inline void outWheelPWM(float pwm, uint32_t Channel, GPIO_TypeDef* P_GPIOx, uint
 /**
  * @brief pwm初始化
  */
-void pwm_init(void) {
+void pwm_start(void) {
     // 使能PID中断
     HAL_TIM_Base_Start_IT(&TIM_PID);
 

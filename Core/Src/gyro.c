@@ -46,9 +46,6 @@ bool findCPUEndian(void) {
  */
 void gyro_init(UART_HandleTypeDef* huart) {
     gyrohuart = huart;
-    gyroHalfRecvLen = 0;
-    // 开启空闲中断
-    __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
 }
 
 /**
@@ -64,9 +61,19 @@ void gyro_init_default(UART_HandleTypeDef* huart) {
 }
 
 /**
- * @brief 读取1次陀螺仪数据
+ * @brief 正式启用陀螺仪
  */
 void gyro_start() {
+    gyroHalfRecvLen = 0;
+    // 开启空闲中断
+    __HAL_UART_ENABLE_IT(gyrohuart, UART_IT_IDLE);
+    gyro_start_once();
+}
+
+/**
+ * @brief 读取1次陀螺仪数据
+ */
+void gyro_start_once() {
     HAL_UART_Receive_DMA(gyrohuart, gyroReceive, GYRO_BUF_LENGTH);
 }
 
@@ -138,7 +145,7 @@ void gyroMessageRecord(void) {
     // 清空缓冲区
     memset(gyroReceive, 0, GYRO_BUF_LENGTH);
     // 继续DMA接收
-    gyro_start();
+    gyro_start_once();
 
     bool succeed = false;
     uint8_t* ptr = gyroHalfRecvBuf;
@@ -186,9 +193,9 @@ void gyroMessageRecord(void) {
     }
 
     ++gyrotestCount;
-    if (gyrotestCount >= 25) {
+    if (gyrotestCount >= 20) {
         HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
-        gyrotestCount -= 25;
+        gyrotestCount -= 20;
     }
 }
 
@@ -199,7 +206,7 @@ void gyroError(void) {
     // 稍后重启
     // HAL_UART_DMAStop(gyrohuart);
     // delay_us(500);
-    // gyro_start();
+    // gyro_start_once();
 }
 
 /**
