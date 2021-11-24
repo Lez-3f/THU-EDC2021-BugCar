@@ -3,13 +3,17 @@
 */
 #include "gyro.h"
 #include "delay.h"
+#include <string.h>
 
 volatile GyroInfoTypeDef gyroAccelerate;  // 储存加速度
 volatile GyroInfoTypeDef gyroVelocity;    // 储存角速度
 volatile GyroInfoTypeDef gyroAngle;       // 储存角度值
 volatile float gyroTemperature;           // 储存温度值
 
-GyroMsgTypeDef gyroReceive;   // 实时记录收到的信息
+uint8_t gyroReceive[GYRO_BUF_LENGTH];   // 实时记录收到的信息
+uint8_t gyroHalfRecvBuf[GYRO_BUF_LENGTH + sizeof(gyroMessage)];  // 储存未全部被接收的消息
+uint8_t gyroHalfRecvLen = 0;    // 储存未完全接收消息的长度
+GyroMsgTypeDef gyroMessage;   // 解析收到的信息
 
 uint8_t gyroComInitAngle[] = { 0xFF, 0xAA, 0x52 };
 uint8_t gyroComCalibrate[] = { 0xFF, 0xAA, 0x67 };
@@ -22,6 +26,8 @@ uint8_t gyroComSleepAwake[] = { 0xFF, 0xAA, 0x60 };
 UART_HandleTypeDef* gyrohuart;
 // 定义初始状态修正后的绝对角度
 volatile float GYRO_REVISE_BASE = 0;
+
+int8_t gyrotestCount = 0;
 
 /**
  * @brief CPU大小端
@@ -40,6 +46,9 @@ bool findCPUEndian(void) {
  */
 void gyro_init(UART_HandleTypeDef* huart) {
     gyrohuart = huart;
+    gyroHalfRecvLen = 0;
+    // 开启空闲中断
+    __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
 }
 
 /**
@@ -55,51 +64,51 @@ void gyro_init_default(UART_HandleTypeDef* huart) {
 }
 
 /**
- * @brief 正式启用陀螺仪
+ * @brief 读取1次陀螺仪数据
  */
 void gyro_start() {
-    HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
+    HAL_UART_Receive_DMA(gyrohuart, gyroReceive, GYRO_BUF_LENGTH);
 }
 
 /**
  * @brief 加速度解码
  */
 inline void gyroDecodeAccelerate(void) {
-    gyroAccelerate.x = (float)gyroReceive.dec.x / 32768 * 16 * GYRO_g;
-    gyroAccelerate.y = (float)gyroReceive.dec.y / 32768 * 16 * GYRO_g;
-    gyroAccelerate.z = (float)gyroReceive.dec.z / 32768 * 16 * GYRO_g;
+    gyroAccelerate.x = (float)gyroMessage.dec.x / 32768 * 16 * GYRO_g;
+    gyroAccelerate.y = (float)gyroMessage.dec.y / 32768 * 16 * GYRO_g;
+    gyroAccelerate.z = (float)gyroMessage.dec.z / 32768 * 16 * GYRO_g;
 }
 
 /**
  * @brief 角速度解码
  */
 inline void gyroDecodeVelocity(void) {
-    gyroVelocity.x = (float)gyroReceive.dec.x / 32768 * 2000;
-    gyroVelocity.y = (float)gyroReceive.dec.y / 32768 * 2000;
-    gyroVelocity.z = (float)gyroReceive.dec.z / 32768 * 2000;
+    gyroVelocity.x = (float)gyroMessage.dec.x / 32768 * 2000;
+    gyroVelocity.y = (float)gyroMessage.dec.y / 32768 * 2000;
+    gyroVelocity.z = (float)gyroMessage.dec.z / 32768 * 2000;
 }
 
 /**
  * @brief 角度值解码
  */
 inline void gyroDecodeAngle(void) {
-    gyroAngle.x = (float)gyroReceive.dec.x / 32768 * 180;
-    gyroAngle.y = (float)gyroReceive.dec.y / 32768 * 180;
-    gyroAngle.z = (float)gyroReceive.dec.z / 32768 * 180;
+    gyroAngle.x = (float)gyroMessage.dec.x / 32768 * 180;
+    gyroAngle.y = (float)gyroMessage.dec.y / 32768 * 180;
+    gyroAngle.z = (float)gyroMessage.dec.z / 32768 * 180;
 }
 
 /**
  * @brief 温度值解码
  */
 inline void gyroDecodeTemperature(void) {
-    gyroTemperature = (float)gyroReceive.dec.temperature / 340 + 36.53;
+    gyroTemperature = (float)gyroMessage.dec.temperature / 340 + 36.53;
 }
 
 /**
  * @brief 解码
  */
 inline void gyroDecode(void) {
-    switch (gyroReceive.dec.type) {
+    switch (gyroMessage.dec.type) {
     case 0x51:
         gyroDecodeAccelerate();
         break;
@@ -119,23 +128,78 @@ inline void gyroDecode(void) {
  * @brief 实时记录信息，在每次接收完成后更新数据，重新开启中断
  */
 void gyroMessageRecord(void) {
-    if (gyroReceive.dec.head == 0x55) {
-        uint8_t sum = 0x00;
-        for (int8_t i = 0; i < sizeof(gyroReceive) - 1; ++i) {
-            sum += gyroReceive.buf[i];
+    // 停止DMA接收
+    HAL_UART_DMAStop(gyrohuart);
+    // 计算接收数据长度
+    uint8_t data_length = GYRO_BUF_LENGTH - __HAL_DMA_GET_COUNTER(gyrohuart->hdmarx);
+    // 暂存
+    memcpy(gyroHalfRecvBuf + gyroHalfRecvLen, gyroReceive, data_length);
+    gyroHalfRecvLen += data_length;
+    // 清空缓冲区
+    memset(gyroReceive, 0, GYRO_BUF_LENGTH);
+    // 继续DMA接收
+    gyro_start();
+
+    bool succeed = false;
+    uint8_t* ptr = gyroHalfRecvBuf;
+    for (;ptr - gyroHalfRecvBuf <= gyroHalfRecvLen - sizeof(gyroMessage);++ptr) {
+        // 寻找数据包头
+        if (*ptr == 0x55) {
+            memcpy(gyroMessage.buf, gyroHalfRecvBuf, sizeof(gyroMessage));
+            // 校验
+            uint8_t sum = 0x00;
+            for (int8_t i = 0; i < sizeof(gyroMessage) - 1; ++i) {
+                sum += gyroMessage.buf[i];
+            }
+            if (sum == gyroMessage.dec.sum) {
+                // 校验成功
+                succeed = true;
+                ptr += sizeof(gyroMessage);
+            }
         }
-        if (sum == gyroReceive.dec.sum) {
-            // 校验成功
-            gyroDecode();
-        } else {
-            // 校验失败后重启DMA
-            HAL_UART_DMAStop(gyrohuart);
-        }
-    } else {
-        // 校验失败后重启DMA
-        HAL_UART_DMAStop(gyrohuart);
     }
-    HAL_UART_Receive_DMA(gyrohuart, gyroReceive.buf, sizeof(gyroReceive));
+
+    uint8_t* lastptr = NULL;
+    for (;ptr - gyroHalfRecvBuf < gyroHalfRecvLen;++ptr) {
+        // 寻找数据包头
+        if (*ptr == 0x55) {
+            lastptr = ptr;
+            break;
+        }
+    }
+
+    gyroHalfRecvLen = 0;
+    if (lastptr != NULL) {
+        for (uint8_t* cpyptr = gyroHalfRecvBuf;lastptr - gyroHalfRecvBuf < gyroHalfRecvLen;++cpyptr, ++lastptr) {
+            *cpyptr = *lastptr;
+            ++gyroHalfRecvLen;
+        }
+    }
+
+    if (succeed) {
+        // 校验成功
+        gyroDecode();
+        ++gyrotestCount;
+    } else {
+        // 校验失败
+        gyroError();
+    }
+
+    ++gyrotestCount;
+    if (gyrotestCount >= 25) {
+        HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+        gyrotestCount -= 25;
+    }
+}
+
+/**
+ * @brief 校验失败处理
+ */
+void gyroError(void) {
+    // 稍后重启
+    // HAL_UART_DMAStop(gyrohuart);
+    // delay_us(500);
+    // gyro_start();
 }
 
 /**

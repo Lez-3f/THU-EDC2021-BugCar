@@ -67,19 +67,28 @@ void SystemClock_Config(void);
  * @param htim 触发中断的TIM指针
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
+  static int16_t PIDCounter = 0;
   if (htim == &TIM_PID) {
-    TIM_PID_Callback();
+    if (PIDCounter >= GyroDoubling) {
+      PIDCounter -= GyroDoubling;
+      TIM_PID_Callback();
+    }
+    ++PIDCounter;
   }
 }
 
 /**
- * @brief UART的DMA接收完成中断
- *
- * @param huart
+ * @brief UART的中断(空闲中断)
  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
+void HAL_USER_UART_IRQHandler(UART_HandleTypeDef* huart) {
   if (huart == &UART_GYRO) {
-    gyroMessageRecord();
+    // 确认是否为空闲中断
+    if (RESET != __HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE)) {
+      // 清除空闲中断标志
+      __HAL_UART_CLEAR_IDLEFLAG(huart);
+      // 调用处理函数
+      gyroMessageRecord();
+    }
   }
 }
 
@@ -88,12 +97,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
  */
 void setup(void) {
   delay_init();
-  pwm_init();
   gyro_init_default(&UART_GYRO);
   HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_SET);
-  delay_ms(2000);
+  delay_ms(1000);
   HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
-  gyro_start();
+  pwm_init();
 }
 
 /**
@@ -106,47 +114,51 @@ void loop(void) {
   // HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
   // delay_ms(100);
 
-  if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) == GPIO_PIN_RESET) {
-    HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
-  } else {
-    HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
-  }
+  // if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) == GPIO_PIN_RESET) {
+  //   HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+  // } else {
+  //   HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
+  // }
 
-  // 状态变量
-  static int16_t state = 0;
-  // 转弯前角度
-  static float angle0 = 0;
-  // 转弯次数
-  static int16_t roundi = 0;
   if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
     setSpeedStraight0();
     setAngle(getRealAngle());
-    state = 0;
   } else {
-    switch (state) {
-    case 0:
-      angle0 = getRealAngle();
-      roundi = 0;
-      ++state;
-    case 1:
-      setSpeedStraight0();
-      setAngle(angle0 - 90 * (roundi + 1));
-      ++state;
-    case 2:
-      if (isAngleCompleted()) {
-        setSpeedStraight(40, 30);
-        ++state;
-      } else {
-        break;
+    setSpeedStraight0();
+    // 转弯前角度
+    float angle0 = getRealAngle();
+    setAngle(angle0);
+    for (int i = 0;i < 4;++i) {
+      setSpeedStraight(40, 30);
+      while (!isDisCompleted()) {
+        if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
+          return;
+        }
       }
-    case 3:
-      if (isDisCompleted()) {
-        roundi = (roundi + 1) % 4;
-        state = 1;
+      setAngle(angle0 - 90 * (i + 1));
+      while (!isAngleCompleted()) {
+        if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
+          return;
+        }
       }
-      break;
-    default:
-      break;
+    }
+
+    // 防过热暂停
+    delay_ms(1000);
+
+    for (int i = 0;i < 4;++i) {
+      setAngle(angle0 + 90 * (i + 1));
+      while (!isAngleCompleted()) {
+        if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
+          return;
+        }
+      }
+      setSpeedStraight(-40, 30);
+      while (!isDisCompleted()) {
+        if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
+          return;
+        }
+      }
     }
   }
   delay_ms(20);

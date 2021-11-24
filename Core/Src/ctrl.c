@@ -84,7 +84,7 @@ void CTRL_After_Callback(void) {
             testDataBuf.angle = getRealAngle();
             testDataBuf.dis = cnt4Real / DIS2CNT4_AVE;
             uwrite_DMA(&UART_COMM, (uint8_t*)&testDataBuf, sizeof(testDataBuf));
-            // uwrite_DMA(&UART_COMM, gyroReceive.buf, sizeof(gyroReceive));
+            // uwrite_DMA(&UART_COMM, gyroMessage.buf, sizeof(gyroMessage));
         }
 
         // uprintf_DMA(testDataBuf, &UART_COMM, "%f %f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate, getRealAngle());

@@ -54,13 +54,14 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void HAL_USER_UART_IRQHandler(UART_HandleTypeDef* huart);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 #define PIDPeriod 5000
 #define PWMPeriod 10800
 #define UnitFreq 100000
+#define GyroDoubling 5
 #define pinRFdirN_Pin GPIO_PIN_2
 #define pinRFdirN_GPIO_Port GPIOC
 #define pinRFdirP_Pin GPIO_PIN_3

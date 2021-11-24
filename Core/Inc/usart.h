@@ -16,7 +16,7 @@
   *
   ******************************************************************************
   */
-  /* Define to prevent recursive inclusion -------------------------------------*/
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USART_H__
 #define __USART_H__
 
@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-  /* Includes ------------------------------------------------------------------*/
+/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
@@ -34,26 +34,27 @@ extern "C" {
 #include "delay.h"
 /* USER CODE END Includes */
 
-  extern UART_HandleTypeDef huart4;
-  extern UART_HandleTypeDef huart2;
-  extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart4;
+extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart3;
 
-  /* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN Private defines */
 #define UART_COMM huart2
 #define UART_GYRO huart4
+#define UART_GYRO_HDMA_RX 
 #define MAXSTRBUF 128
 /* USER CODE END Private defines */
 
-  void MX_UART4_Init(void);
-  void MX_USART2_UART_Init(void);
-  void MX_USART3_UART_Init(void);
+void MX_UART4_Init(void);
+void MX_USART2_UART_Init(void);
+void MX_USART3_UART_Init(void);
 
-  /* USER CODE BEGIN Prototypes */
+/* USER CODE BEGIN Prototypes */
   HAL_StatusTypeDef uprintf(UART_HandleTypeDef* huart, const char* fmt, ...);
   HAL_StatusTypeDef uprintf_DMA(uint8_t* buf, UART_HandleTypeDef* huart, const char* fmt, ...);
   HAL_StatusTypeDef uwrite(UART_HandleTypeDef* huart, uint8_t* buf, uint16_t size);
   HAL_StatusTypeDef uwrite_DMA(UART_HandleTypeDef* huart, uint8_t* buf, uint16_t size);
-  /* USER CODE END Prototypes */
+/* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }

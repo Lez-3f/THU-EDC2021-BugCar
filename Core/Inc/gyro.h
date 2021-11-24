@@ -10,6 +10,8 @@
 
 // 定义重力加速度值
 #define GYRO_g 9.8
+// 接收缓冲区长度
+#define GYRO_BUF_LENGTH 64
 // 定义初始状态修正后的绝对角度
 extern volatile float GYRO_REVISE_BASE;
 
@@ -38,13 +40,14 @@ extern volatile GyroInfoTypeDef gyroAccelerate;  // 储存加速度
 extern volatile GyroInfoTypeDef gyroVelocity;    // 储存角速度
 extern volatile GyroInfoTypeDef gyroAngle;       // 储存角度值
 extern volatile float gyroTemperature;           // 储存温度值
-extern GyroMsgTypeDef gyroReceive;
+extern GyroMsgTypeDef gyroMessage;
 
 bool findCPUEndian(void);   // CPU大小端
 void gyro_init(UART_HandleTypeDef* huart);  // 初始化
 void gyro_init_default(UART_HandleTypeDef* huart);  // 初始化(默认)
-void gyro_start();  // 正式启用
+void gyro_start(void);  // 正式启用
 void gyroMessageRecord(void);   // 实时记录信息，在每次接收完成后更新数据，重新开启中断
+void gyroError(void);   // 校验失败处理
 
 void gyroSetBaud(bool Baud115200); // 设置波特率，可选择115200或9600
 void gyroSetHorizontal(void);   // 设置为水平放置模式
