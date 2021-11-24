@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    usart.h
+  * @file    dma.h
   * @brief   This file contains all the function prototypes for
-  *          the usart.c file
+  *          the dma.c file
   ******************************************************************************
   * @attention
   *
@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USART_H__
-#define __USART_H__
+#ifndef __DMA_H__
+#define __DMA_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,39 +27,26 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+/* DMA memory to memory transfer handles -------------------------------------*/
+
 /* USER CODE BEGIN Includes */
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include "delay.h"
+
 /* USER CODE END Includes */
 
-extern UART_HandleTypeDef huart4;
-extern UART_HandleTypeDef huart2;
-extern UART_HandleTypeDef huart3;
-
 /* USER CODE BEGIN Private defines */
-#define UART_COMM huart2
-#define UART_GYRO huart4
-#define UART_GYRO_HDMA_RX 
-#define MAXSTRBUF 128
+
 /* USER CODE END Private defines */
 
-void MX_UART4_Init(void);
-void MX_USART2_UART_Init(void);
-void MX_USART3_UART_Init(void);
+void MX_DMA_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-  HAL_StatusTypeDef uprintf(UART_HandleTypeDef* huart, const char* fmt, ...);
-  HAL_StatusTypeDef uprintf_DMA(uint8_t* buf, UART_HandleTypeDef* huart, const char* fmt, ...);
-  HAL_StatusTypeDef uwrite(UART_HandleTypeDef* huart, uint8_t* buf, uint16_t size);
-  HAL_StatusTypeDef uwrite_DMA(UART_HandleTypeDef* huart, uint8_t* buf, uint16_t size);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __USART_H__ */
+#endif /* __DMA_H__ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

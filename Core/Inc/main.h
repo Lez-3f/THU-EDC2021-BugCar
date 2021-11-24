@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "delay.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -54,7 +54,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void HAL_USER_UART_IRQHandler(UART_HandleTypeDef* huart);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -83,6 +83,10 @@ void Error_Handler(void);
 #define pinLBdirN_GPIO_Port GPIOC
 #define pinEnable_Pin GPIO_PIN_1
 #define pinEnable_GPIO_Port GPIOB
+#define pinTX3_Pin GPIO_PIN_10
+#define pinTX3_GPIO_Port GPIOB
+#define pinRX3_Pin GPIO_PIN_11
+#define pinRX3_GPIO_Port GPIOB
 #define pinRBspB_Pin GPIO_PIN_6
 #define pinRBspB_GPIO_Port GPIOC
 #define pinRBspA_Pin GPIO_PIN_7

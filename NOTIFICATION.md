@@ -58,3 +58,15 @@ VSCode中的git插件
 * 注意gitee使用流程，详见`README.md`
 
 ## 9. 在中断里用到的全局变量最好使用volatile修饰
+
+## 10. DMA串口校验失败纠正
+
+<https://blog.csdn.net/u014779536/article/details/104369528>
+
+![png](./assets/10.1.png)
+
+## 11. DMA初始化顺序问题
+
+<https://blog.csdn.net/as480133937/article/details/104827639>
+
+![png](./assets/11.1.png)
