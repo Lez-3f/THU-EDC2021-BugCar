@@ -1,4 +1,9 @@
 #include"strategy.h"
+#include"ctrl.h"
+#include<math.h>
+#include"uppercom.h"
+#include"delay.h"
+
 
 void go2Point(Pos dest)
 {

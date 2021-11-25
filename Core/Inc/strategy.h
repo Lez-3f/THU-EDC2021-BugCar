@@ -5,11 +5,7 @@
 #ifndef _STRATEGY_H_
 #define _STRATEGY_H_
 
-#include"main.h"
 #include"value.h"
-#include"ctrl.h"
-#include<math.h>
-#include"uppercom.h"
 
 extern Object m[2]; //metal
 extern Object w[8]; //warehouse

@@ -17,7 +17,8 @@
             "gyro.h": "c",
             "round1.h": "c",
             "strategy.h": "c",
-            "uppercom.h": "c"
+            "uppercom.h": "c",
+            "ctrl.h": "c"
         },
         "C_Cpp.default.intelliSenseMode": "gcc-arm",
         "files.autoGuessEncoding": true,
