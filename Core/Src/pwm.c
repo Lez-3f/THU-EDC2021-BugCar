@@ -7,7 +7,7 @@ volatile PIDTypeDef pidLF = { 0.012, 4, 0, 0 };
 volatile PIDTypeDef pidRF = { 0.0122, 6, 0.009, 0 };
 volatile PIDTypeDef pidRB = { 0.0125, 3.9, 0.014, 0 };
 
-volatile PIDTypeDef pidAngle = { 0.06, 0, 0, 0 };
+volatile PIDTypeDef pidAngle = { 0.08, 0, 0, 0 };
 
 #define EnableLB
 #define EnableLF
