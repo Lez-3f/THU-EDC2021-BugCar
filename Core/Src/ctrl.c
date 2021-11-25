@@ -10,6 +10,7 @@ volatile int32_t cnt4Goal = 0;
 volatile int32_t cnt4Real = 0;
 volatile bool disCompleted = true;
 volatile bool angleCompleted = false;
+bool angleCompletedLastflag = false;
 
 uint8_t testCount = 0;
 #pragma pack(1)
@@ -33,7 +34,8 @@ void CTRL_Callback(void) {
         float err = pidAngle.goalstate - newstate;
         err = ANGLE_NORM(err);
         if (err < ANGLE_COMPLETE_DELTA && err > -ANGLE_COMPLETE_DELTA) {
-            angleCompleted = true;
+            angleCompleted = angleCompletedLastflag;
+            angleCompletedLastflag = true;
         }
 
         pidAngle.pwm = calcAnglePWM(err, &pidAngle);
@@ -178,6 +180,7 @@ float getRealAngle() {
 void setAngle(float ag) {
     pidAngle.goalstate = ANGLE_NORM(ag - GYRO_REVISE_BASE);
     pidAngle.errint = 0;
+    angleCompletedLastflag = false;
     angleCompleted = false;
 }
 
