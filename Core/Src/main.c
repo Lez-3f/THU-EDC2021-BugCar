@@ -130,12 +130,14 @@ void loop(void) {
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
           return;
         }
+        delay_ms(20);
       }
       setAngle(angle0 - 90 * (i + 1));
       while (!isAngleCompleted()) {
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
           return;
         }
+        delay_ms(20);
       }
     }
 
@@ -148,14 +150,19 @@ void loop(void) {
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
           return;
         }
+        delay_ms(20);
       }
       setSpeedStraight(-40, 30);
       while (!isDisCompleted()) {
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
           return;
         }
+        delay_ms(20);
       }
     }
+
+    // 防过热暂停
+    delay_ms(1000);
   }
   delay_ms(20);
 }
