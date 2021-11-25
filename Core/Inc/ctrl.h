@@ -3,7 +3,7 @@
 
 #include "pwm.h"
 #include <stdbool.h>
-#include <math.h>
+#include "math.h"
 
 #define MAX_DISTANCE 600
 #define MIN_ROT_DELTA_SPEED 20

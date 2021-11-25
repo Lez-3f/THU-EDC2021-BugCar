@@ -14,7 +14,10 @@
             "main.h": "c",
             "math.h": "c",
             "cmath": "c",
-            "gyro.h": "c"
+            "gyro.h": "c",
+            "round1.h": "c",
+            "strategy.h": "c",
+            "uppercom.h": "c"
         },
         "C_Cpp.default.intelliSenseMode": "gcc-arm",
         "files.autoGuessEncoding": true,
