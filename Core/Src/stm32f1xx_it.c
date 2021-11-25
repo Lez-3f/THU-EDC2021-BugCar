@@ -57,6 +57,10 @@
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim2;
+extern DMA_HandleTypeDef hdma_uart4_rx;
+extern DMA_HandleTypeDef hdma_usart2_tx;
+extern UART_HandleTypeDef huart4;
+extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -73,8 +77,7 @@ void NMI_Handler(void)
 
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
-  while (1)
-  {
+  while (1) {
   }
   /* USER CODE END NonMaskableInt_IRQn 1 */
 }
@@ -200,6 +203,20 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles DMA1 channel7 global interrupt.
+  */
+void DMA1_Channel7_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel7_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel7_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart2_tx);
+  /* USER CODE BEGIN DMA1_Channel7_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel7_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM2 global interrupt.
   */
 void TIM2_IRQHandler(void)
@@ -211,6 +228,48 @@ void TIM2_IRQHandler(void)
   /* USER CODE BEGIN TIM2_IRQn 1 */
 
   /* USER CODE END TIM2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles USART2 global interrupt.
+  */
+void USART2_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART2_IRQn 0 */
+
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&huart2);
+  /* USER CODE BEGIN USART2_IRQn 1 */
+
+  /* USER CODE END USART2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles UART4 global interrupt.
+  */
+void UART4_IRQHandler(void)
+{
+  /* USER CODE BEGIN UART4_IRQn 0 */
+
+  /* USER CODE END UART4_IRQn 0 */
+  HAL_UART_IRQHandler(&huart4);
+  /* USER CODE BEGIN UART4_IRQn 1 */
+  HAL_USER_UART_IRQHandler(&huart4);
+  /* USER CODE END UART4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles DMA2 channel3 global interrupt.
+  */
+void DMA2_Channel3_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA2_Channel3_IRQn 0 */
+
+  /* USER CODE END DMA2_Channel3_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_uart4_rx);
+  /* USER CODE BEGIN DMA2_Channel3_IRQn 1 */
+
+  /* USER CODE END DMA2_Channel3_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

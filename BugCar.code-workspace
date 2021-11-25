@@ -11,7 +11,10 @@
             "delay.h": "c",
             "pwm.h": "c",
             "tim.h": "c",
-            "main.h": "c"
+            "main.h": "c",
+            "math.h": "c",
+            "cmath": "c",
+            "gyro.h": "c"
         },
         "C_Cpp.default.intelliSenseMode": "gcc-arm",
         "files.autoGuessEncoding": true,
@@ -22,7 +25,10 @@
     "extensions": {
         "recommendations": [
             "cl.eide",
+            "keroc.hex-fmt",
             "hars.cppsnippets",
+            "zixuanwang.linkerscript",
+            "dan-c-underwood.arm",
             "zixuanwang.linkerscript",
             "marus25.cortex-debug"
         ]

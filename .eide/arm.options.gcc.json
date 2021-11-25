@@ -19,7 +19,7 @@
     },
     "linker": {
         "output-format": "elf",
-        "LD_FLAGS": "--specs=nosys.specs --specs=nano.specs -Wl,--gc-sections",
+        "LD_FLAGS": "--specs=nosys.specs -Wl,--gc-sections",
         "LIB_FLAGS": "-lm"
     }
 }

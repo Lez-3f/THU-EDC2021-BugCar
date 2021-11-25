@@ -17,7 +17,9 @@ extern TIM_HandleTypeDef htim13;  //当使用FreeRTOS，Timebase Source为其他
 static uint16_t fac_us = 0;
 static uint32_t fac_ms = 0;
 
-/*初始化*/
+/**
+ * @brief 延时初始化
+ */
 void delay_init(void) {
 #if (!Timebase_Source_is_SysTick)
     fac_ms = 100000;  //作为时基的计数器时钟频率在HAL_InitTick()中被设为了1MHz
