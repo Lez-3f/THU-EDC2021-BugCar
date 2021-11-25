@@ -50,7 +50,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t maintestcount = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -116,9 +116,15 @@ void loop(void) {
   // }
 
   if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
+    ++maintestcount;
+    if (maintestcount >= 5) {
+      maintestcount -= 5;
+      HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+    }
     setSpeedStraight0();
     setAngle(getRealAngle());
   } else {
+    HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
     setSpeedStraight0();
     // 转弯前角度
     float angle0 = getRealAngle();
@@ -129,17 +135,16 @@ void loop(void) {
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
           return;
         }
-        delay_ms(20);
+        delay_ms(10);
       }
       setAngle(angle0 - 90 * (i + 1));
       while (!isAngleCompleted()) {
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
           return;
         }
-        delay_ms(20);
+        delay_ms(10);
       }
     }
-
     // 防过热暂停
     delay_ms(1000);
 
@@ -149,21 +154,20 @@ void loop(void) {
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
           return;
         }
-        delay_ms(20);
+        delay_ms(10);
       }
       setSpeedStraight(-40, 30);
       while (!isDisCompleted()) {
         if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
           return;
         }
-        delay_ms(20);
+        delay_ms(10);
       }
     }
-
     // 防过热暂停
     delay_ms(1000);
   }
-  delay_ms(20);
+  delay_ms(10);
 }
 /* USER CODE END 0 */
 
