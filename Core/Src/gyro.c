@@ -27,7 +27,7 @@ UART_HandleTypeDef* gyrohuart;
 // 定义初始状态修正后的绝对角度
 volatile float GYRO_REVISE_BASE = 0;
 
-int8_t gyrotestCount = 0;
+// int8_t gyrotestCount = 0;
 
 /**
  * @brief CPU大小端
@@ -186,17 +186,17 @@ void gyroMessageRecord(void) {
     if (succeed) {
         // 校验成功
         gyroDecode();
-        ++gyrotestCount;
+        // ++gyrotestCount;
     } else {
         // 校验失败
         gyroError();
     }
 
-    ++gyrotestCount;
-    if (gyrotestCount >= 20) {
-        HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
-        gyrotestCount -= 20;
-    }
+    // ++gyrotestCount;
+    // if (gyrotestCount >= 20) {
+    //     HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+    //     gyrotestCount -= 20;
+    // }
 }
 
 /**

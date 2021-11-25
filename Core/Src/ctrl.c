@@ -12,7 +12,6 @@ volatile bool disCompleted = true;
 volatile bool angleCompleted = false;
 bool angleCompletedLastflag = false;
 
-uint8_t testCount = 0;
 #pragma pack(1)
 struct {
     uint8_t head;
@@ -68,29 +67,25 @@ void CTRL_Callback(void) {
  * @brief PID计算后回调函数
  */
 void CTRL_After_Callback(void) {
-    ++testCount;
-    if (testCount >= 1) {
-        testCount = 0;
-        // uprintf(&UART_COMM, "%f %f %f %f ", pidLB.realstate, pidLB.pwm, pidLF.realstate, pidLF.pwm);
-        // uprintf(&UART_COMM, "%f %f %f %f \n", pidRF.realstate, pidRF.pwm, pidRB.realstate, pidRB.pwm);
+    // uprintf(&UART_COMM, "%f %f %f %f ", pidLB.realstate, pidLB.pwm, pidLF.realstate, pidLF.pwm);
+    // uprintf(&UART_COMM, "%f %f %f %f \n", pidRF.realstate, pidRF.pwm, pidRB.realstate, pidRB.pwm);
 
-        // uprintf(&UART_COMM, "%d %d %d %d \n", (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LB_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LF_SP),
-            // (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RF_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RB_SP));
+    // uprintf(&UART_COMM, "%d %d %d %d \n", (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LB_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_LF_SP),
+        // (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RF_SP), (int16_t)__HAL_TIM_GET_COUNTER(&TIM_RB_SP));
 
-        if (UART_COMM.gState == HAL_UART_STATE_READY) {
-            testDataBuf.head = 0xAA;
-            testDataBuf.LB = pidLB.realstate;
-            testDataBuf.LF = pidLF.realstate;
-            testDataBuf.RF = pidRF.realstate;
-            testDataBuf.RB = pidRB.realstate;
-            testDataBuf.angle = getRealAngle();
-            testDataBuf.dis = cnt4Real / DIS2CNT4_AVE;
-            uwrite_DMA(&UART_COMM, (uint8_t*)&testDataBuf, sizeof(testDataBuf));
-            // uwrite_DMA(&UART_COMM, gyroMessage.buf, sizeof(gyroMessage));
-        }
-
-        // uprintf_DMA(testDataBuf, &UART_COMM, "%f %f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate, getRealAngle());
+    if (UART_COMM.gState == HAL_UART_STATE_READY) {
+        testDataBuf.head = 0xAA;
+        testDataBuf.LB = pidLB.realstate;
+        testDataBuf.LF = pidLF.realstate;
+        testDataBuf.RF = pidRF.realstate;
+        testDataBuf.RB = pidRB.realstate;
+        testDataBuf.angle = getRealAngle();
+        testDataBuf.dis = cnt4Real / DIS2CNT4_AVE;
+        uwrite_DMA(&UART_COMM, (uint8_t*)&testDataBuf, sizeof(testDataBuf));
+        // uwrite_DMA(&UART_COMM, gyroMessage.buf, sizeof(gyroMessage));
     }
+
+    // uprintf_DMA(testDataBuf, &UART_COMM, "%f %f %f %f %f \n", pidLB.realstate, pidLF.realstate, pidRF.realstate, pidRB.realstate, getRealAngle());
 }
 
 /**
