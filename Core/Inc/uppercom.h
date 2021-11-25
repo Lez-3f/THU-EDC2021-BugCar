@@ -3,7 +3,8 @@
 
 #include"main.h"
 #include "value.h"
-
+#include<stdbool.h>
+/*
 //通用
 uint8_t GameState;                 //比赛开始标志
 uint32_t MineIntensity[2];         //场上金属强度
@@ -30,5 +31,11 @@ uint16_t DistanceOfRivalBeacon[3];      //小车距对方信标距离
 Pos MemoryCarPos[3];
 uint32_t MemoryMineIntensity1[3];
 uint32_t MemoryMineIntensity2[3];
+*/
+//接口函数
+
+Pos getCurPos();
+
+bool isGamePause();
 
 #endif

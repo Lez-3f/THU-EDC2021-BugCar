@@ -6,6 +6,8 @@
 #define _STRATEGY_H_
 
 #include"value.h"
+#include<stdbool.h>
+#define SPEED 50
 
 extern Object m[2]; //metal
 extern Object w[8]; //warehouse
@@ -18,6 +20,8 @@ Pos calMetPos(int S[3], Pos P[3]);  //根据三个点的强度和三个点的位
 Pos calCarPosByBeacon(int d[3]);    //通过己方信标到本方位置的距离计算出本方小车所在的位置
 
 /* 行走部分 */
+
+bool isEnable();
 
 void go2Point(Pos p);
 
