@@ -31,7 +31,11 @@ zigbee.h
 
 void zigbee_Init(UART_HandleTypeDef* huart);    //初始化
 void zigbeeMessageRecord(uint8_t length);							//实时记录信息，在每次中断处理完成后重新开启中断
-void zigbeeSend(int MineType);   //小车放置信标同时需要发送的消息
+/**
+ * @brief 小车放置信标发送信息
+ * @param Minetype 信标仓库种类 0-3
+ */
+void zigbeeSend(int MineType);   
 /**
  * @brief 获取比赛时间，单位为0.1s,范围为0-120s
  */
@@ -46,18 +50,22 @@ uint8_t getGameState(void);
 uint16_t getCarTask(void);
 /**
  * @brief 获取金矿强度是否有效 有效为1，无效为0
+ * @param MineNo 场上金属序号：0,1
  */
 uint16_t getIsMineIntensityValid(int MineNo);
 /**
  * @brief 获取场上2个金矿的种类
+ * @param MineNo 场上金属序号：0,1
  */
 uint16_t getMineArrayType(int MineNo);  
 /**
  * @brief 获取8个停车点能够存储的金矿种类
+ * @param ParkDotNo 八个仓库序号：0-7
  */              
 uint16_t getParkDotMineType(int ParkDotNo);       
 /**
  * @brief 获取3个己方信标充当仓库可存储的金矿类型
+ * @param BeaconNo 信标序号0-2
  */         
 uint16_t getMyBeaconMineType(int BeaconNo);      
 /**
@@ -90,31 +98,37 @@ uint16_t getCarPosX(void);
 uint16_t getCarPosY(void);		
 /**
  * @brief 获取小车中心处的两金矿强度
- * @param MineNo 金属种类
+ * @param MineNo 场上金属序号：0,1
  */	                           
 uint32_t getMineIntensity(int MineNo);    
     /**
  * @brief 获取小车到己方3个信标的距离
+ * @param BeaconNo 信标序号 0-2
  */	            
 uint16_t getDistanceOfMyBeacon(int BeaconNo); 
     /**
  * @brief 获取己方3个信标的x坐标
+ * @param BeaconNo 信标序号 0-2
  */	      
 uint16_t getMyBeaconPosX(int BeaconNo);  
     /**
  * @brief 获取己方3个信标的y坐标
+ * @param BeaconNo 信标序号 0-2
  */	          
 uint16_t getMyBeaconPosY(int BeaconNo);   
     /**
  * @brief 获取小车到对方3个信标的距离
+ * @param BeaconNo 信标序号 0-2
  */	           
 uint16_t getDistanceOfRivalBeacon(int BeaconNo);  
     /**
  * @brief 获取对方3个信标的x坐标
+ *  @param BeaconNo 信标序号 0-2
  */	   
 uint16_t getRivalBeaconPosX(int BeaconNo);        
     /**
  * @brief 获取对方3个信标的y坐标
+ *  @param BeaconNo 信标序号 0-2
  */	   
 uint16_t getRivalBeaconPosY(int BeaconNo);        
     /**
@@ -127,10 +141,12 @@ uint16_t getCarZone(void);
 uint16_t getIsCarPosValid(void);                    
     /**
  * @brief 获取小车到己方3个信标距离（信标坐标）是否有效
+ *  @param BeaconNo 信标序号 0-2
  */	           
 uint16_t getIsDistanceOfMyBeaconValid(int BeaconNo); 
     /**
  * @brief 获取小车到对方3个信标距离（信标坐标）是否有效
+ *  @param BeaconNo 信标序号 0-2
  */	       
 uint16_t getIsDistanceOfRivalBeaconValid(int BeaconNo);  
       /**
@@ -143,10 +159,12 @@ int16_t getCarScore(void);
 Pos getCarPos(void);   
     /**
  * @brief 获获取对方信标位置
+ *  @param BeaconNo 信标序号 0-2
  */	                                           
 Pos getRivalBeaconPos(int BeaconNo);  
     /**
  * @brief 我方信标位置
+ *  @param BeaconNo 信标序号 0-2
  */
 Pos getMyBeaconPos(int BeaconNo);
 

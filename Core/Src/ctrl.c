@@ -4,6 +4,7 @@
 #include "usart.h"
 #include "main.h"
 #include "tim.h"
+#include "zigbee.h"
 
 volatile float speedStraight = 0.0;
 volatile int32_t cnt4Goal = 0;
@@ -21,6 +22,13 @@ struct {
     float RB;
     float angle;
     float dis;
+    float CarPosX;
+    float CarPosY;
+    float MineIntensity0;
+    //float MineIntensity1;
+    float MyBeaconPosY0;
+    float MyBeaconPosX0;
+    float DistanceOfMyBeacon;
 } testDataBuf;
 #pragma pack()
 
@@ -81,6 +89,14 @@ void CTRL_After_Callback(void) {
         testDataBuf.RB = pidRB.realstate;
         testDataBuf.angle = getRealAngle();
         testDataBuf.dis = cnt4Real / DIS2CNT4_AVE;
+        testDataBuf.CarPosX = getCarPosX();
+        testDataBuf.CarPosY = getCarPosY();
+        testDataBuf.MineIntensity0 = getMineIntensity(0);
+        //testDataBuf.MineIntensity1 = getMineIntensity(1);
+        testDataBuf.MyBeaconPosX0 = getMyBeaconPosX(0);
+        testDataBuf.MyBeaconPosY0 = getMyBeaconPosY(0);
+        testDataBuf.DistanceOfMyBeacon = getDistanceOfMyBeacon(0);
+
         uwrite_DMA(&UART_COMM, (uint8_t*)&testDataBuf, sizeof(testDataBuf));
         // uwrite_DMA(&UART_COMM, gyroMessage.buf, sizeof(gyroMessage));
     }
