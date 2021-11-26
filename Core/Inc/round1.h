@@ -3,7 +3,9 @@
 
 #include"value.h"
 
-extern Pos R1_Points[6];
+extern Object metal[2], beacon[3];
+
+void measureMetalPos(); //折线测距离
 
 void loop1();
 

@@ -1,7 +1,7 @@
 #include"strategy.h"
 #include<math.h>
 #include"value.h"
-#include"uppercom.h"
+#include"zigbee.h"
 #include"ctrl.h"
 
 # define T_trun 1 //1°
@@ -36,7 +36,7 @@ float abs_arctan_dif(int t1[2],int t2[2])
 int time_cpw(Object* points,int i_w)
 {
 	//num个中间点，1个始car，1个末warehouse
-    //Pos curPos = getCurPos();
+    //Pos curPos = getCarPos();
     int num = 5;
     int vec[6][2];
     int i=0;
@@ -69,7 +69,7 @@ int time_cpw(Object* points,int i_w)
 
 }
 
-void permutation_cpw(int k, int num, Object* points, Pos* b_p)  
+void permutation_cpw(int k, int num, Object* points, Object* b_p)  
 {  
     //递归到底层  
     if(k == num-1){
@@ -85,8 +85,7 @@ void permutation_cpw(int k, int num, Object* points, Pos* b_p)
 
                 for (int i = 0; i < num; ++i)
                 {
-                    b_p[i].x = points[i].x;
-                    b_p[i].y = points[i].y;
+                    b_p = points;
                 }
             }
         }
@@ -112,7 +111,7 @@ void permutation_cpw(int k, int num, Object* points, Pos* b_p)
 
 void getBestPlan( Object* points, Pos* b_p)
 {
-    curPos = getCurPos();
+    curPos = getCarPos();
     best_time = 2540, best_iw = 0;
     permutation_cpw(0, 5, points, b_p);
     b_p[5].x = wareHouse[best_iw].x, b_p[5].y = wareHouse[best_iw].y;

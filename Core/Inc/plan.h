@@ -3,6 +3,6 @@
 
 #include"value.h"
 
-void getBestPlan(Object *points, Pos *b_p);
+void getBestPlan(Object *points, Object *b_p);
 
 #endif

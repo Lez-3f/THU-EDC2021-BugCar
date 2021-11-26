@@ -2,10 +2,10 @@
 #include"ctrl.h"
 #include<math.h>
 #include<stdlib.h>
-#include"uppercom.h"
 #include"delay.h"
 #include"pwm.h"
 #include"value.h"
+#include"zigbee.h"
 
 #define PW2(X) ((X)*(X))
 #define A 1e8
@@ -14,12 +14,20 @@ Object wareHouse[8] = {{0, 0}, {0, 127}, {0, 254}, {127, 0}, {127, 254}, {254, 0
 
 bool isEnable()
 {
-    return !isGamePause() && HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) == GPIO_PIN_RESET;
+    return getGameState() != 2 && getGameState() != 3 && HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) == GPIO_PIN_RESET;
+}
+
+void initWareHouse()
+{
+    for (int i = 0; i < 8; ++i)
+    {
+        wareHouse[i].type = getParkDotMineType(i);
+    }
 }
 
 void go2Point(Pos dest)
 {
-    Pos curPos = getCurPos();
+    Pos curPos = getCarPos();
 
     Pos relaPos;
     relaPos.x = dest.x - curPos.x;
@@ -108,7 +116,7 @@ Pos calMetPos(int S[3], Pos P[3])
     return p;
 }
 
-Pos calCarPosByBeacon(int d[3])
+Pos calCarPosByBeacon(int d[3], Pos b[3])
 {
 	int aa[2], bb[2], cc[2], AA, BB, CC, x0, y0;
 	int i = 0;

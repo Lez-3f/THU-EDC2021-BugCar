@@ -23,6 +23,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "strategy.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -32,7 +33,6 @@
 #include "gyro.h"
 #include "ctrl.h"
 #include "round1.h"
-#include "uppercom.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -128,8 +128,6 @@ void loop(void) {
   // } else {
   //   HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
   //   setSpeedStraight0();
-  
-    loop1();
     // // 转弯前角度
     // float angle0 = getRealAngle();
     // setAngle(angle0);
@@ -171,8 +169,16 @@ void loop(void) {
     // // 防过热暂停
     // delay_ms(1000);
   // }
+  while(getGameState() == 0){}
 
-  delay_ms(10);
+  if(getCarTask() == ROUND_1){
+      loop1();
+  }
+
+  else if (getCarTask() == ROUND_2){
+
+  }
+  
 }
 /* USER CODE END 0 */
 
