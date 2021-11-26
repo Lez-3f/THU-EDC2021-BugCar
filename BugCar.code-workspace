@@ -18,7 +18,9 @@
             "round1.h": "c",
             "strategy.h": "c",
             "uppercom.h": "c",
-            "ctrl.h": "c"
+            "ctrl.h": "c",
+            "value.h": "c",
+            "*.tcc": "c"
         },
         "C_Cpp.default.intelliSenseMode": "gcc-arm",
         "files.autoGuessEncoding": true,

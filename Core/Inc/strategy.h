@@ -10,7 +10,7 @@
 #define SPEED 50
 
 extern Object m[2]; //metal
-extern Object w[8]; //warehouse
+extern Object wareHouse[8]; //warehouse
 extern Object b[3]; //Beacon
 
 /* 计算部分 */
