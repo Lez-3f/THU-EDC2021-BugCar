@@ -15,7 +15,7 @@ void initBeacon2()
 {
     for (int32_t i = 0; i < 3; ++i)
     {
-        beacon[0].x = getMyBeaconPosX(i), beacon[1].y = getMyBeaconPosY(i);
+        beacon[i].x = getMyBeaconPosX(i), beacon[i].y = getMyBeaconPosY(i);
     }
 }
 
