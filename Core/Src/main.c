@@ -201,7 +201,7 @@ void loop(void) {
     // // 防过热暂停
     // delay_ms(1000);
   // }
-  while(getGameState() == 0){
+  while(!isEnable()){
     setSpeedStraight0();
     setAngle(getRealAngle());
     delay_ms(10);

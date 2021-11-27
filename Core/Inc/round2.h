@@ -11,6 +11,6 @@ void initBeacon2(); //初始化信标位置
 
 Pos getBestPoint();
 
-void send2WareHouse();  //把金属送到仓库
+void send2WareHouseLAZY();  //把金属送到仓库
 
 #endif

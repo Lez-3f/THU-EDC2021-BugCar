@@ -101,7 +101,7 @@ int32_t getCarPosY(void);
  * @param MineNo 场上金属序号：0,1
  */	                           
 int32_t getMineIntensity(int MineNo);    
-    /**
+    /**`
  * @brief 获取小车到己方3个信标的距离
  * @param BeaconNo 信标序号 0-2
  */	            

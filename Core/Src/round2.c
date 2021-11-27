@@ -33,7 +33,8 @@ void loop2()
         setAngle(getRealAngle());
     }
     else
-    {/*
+    {
+        
         HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
         setSpeedStraight0();
 
@@ -46,20 +47,22 @@ void loop2()
         // int32_t pointNo = 0;    //点的序号
         // int32_t whouseNo = wareHouse[1].type;   //信标的仓库类型
 
-        go2Point(getBestPoint());
-
         while(isEnable()){
 
-            measureMetalPos(ROUND_2);
+            go2Point(getBestPoint());
 
-            Pos dest = getBestPoint();
-
-            if(getGameTime() > 100)
-            {
-                send2WareHouse();
+            if(!isEnable()){
+                return;
             }
+
+            if(getGameTime() > 100 || getCarMineSumNum() == 10)
+            {
+                send2WareHouseLAZY();
+            }
+
+            measureMetalPos();
         }
-*/
+
         // int32_t i = 0;
         // for (i = 0; i < 500; ++i)
         // {
@@ -67,14 +70,52 @@ void loop2()
         //         delay_ms(10);
         //     }
         // }
+        
     }
     delay_ms(10);
 }
 
-void send2WareHouse()
+//Pos findWHouse(int8_t )
+
+int16_t getCarMineNumByType(int16_t type)
 {
-    Object points[4];
-    Object b_p[4];
+    if (type==0)
+        return getCarMineANum();
+    else if(type==1)
+        return getCarMineBNum();
+    else if (type==2)
+        return getCarMineCNum();
+    else if(type==3)
+        return getCarMineDNum();
+    else{
+        return 0;
+    }
+}
+
+void send2WareHouseLAZY()
+{
+    if(getCarMineNumByType(wareHouse[1].type) > 1 || getGameTime() > 100)
+    {
+        Pos dest = {wareHouse[1].x,wareHouse[1].y};
+        go2Point(dest);
+        if(!isEnable()){
+            return;
+        }
+    }
+
+    for (int16_t i = 0; i < 3; i++)
+    {
+        if (getCarMineNumByType(beacon[i].type) > 1 || getGameTime() > 100)
+        {
+            Pos dest = {beacon[i].x, beacon[i].y};
+            go2Point(dest);
+            if(!isEnable())
+            {
+                return;
+            }
+        }
+    }
+
 }
 
 int32_t getCar2PointTime(Object point)

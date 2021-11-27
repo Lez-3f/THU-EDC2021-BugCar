@@ -76,8 +76,15 @@ void loop1()
                 delay_ms(1000);
                 HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
             }
+
             delay_ms(100);
             ++PointNo;
+        }
+
+        //比赛结束
+        while (isEnable())
+        {
+            delay_ms(10);
         }
 
         // int32_t i = 0;
