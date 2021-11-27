@@ -8,6 +8,7 @@
 #include"value.h"
 #include<stdbool.h>
 #define SPEED 50
+#define SPEED_SLOW 20
 
 /* 通信定义 */
 
@@ -36,13 +37,15 @@ bool isEnable();
 
 void go2Point(Pos p);
 
-void measureMetalPos0(uint8_t round);
+void measureMetalPos0();
 
 void initWareHouse();
 
-bool move(float angle, float distance);
+bool move(float angle, float distance, float speed);
 
 void measureMetalPos(); //第二回合才能用
+
+Pos getCarPosByRound(); //根据情况获得小车当前位置
 
 /* */
 

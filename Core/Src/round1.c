@@ -72,7 +72,7 @@ void loop1()
             if (b_p[PointNo].type == 'N') //信标
             {
                 zigbeeSend((++whouseNo) % 4);
-                HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_SET); //点亮小灯
+                HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_SET);  //点亮小灯
                 delay_ms(1000);
                 HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
             }

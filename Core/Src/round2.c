@@ -1,10 +1,10 @@
-#include"round2.h"
-#include"strategy.h"
-#include"zigbee.h"
-#include"value.h"
-#include"ctrl.h"
-#include"delay.h"
-#include"plan.h"
+#include "round2.h"
+#include "strategy.h"
+#include "zigbee.h"
+#include "value.h"
+#include "ctrl.h"
+#include "delay.h"
+#include "plan.h"
 
 extern uint8_t maintestcount;
 
@@ -34,28 +34,30 @@ void loop2()
     }
     else
     {
-        
+
         HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
         setSpeedStraight0();
 
         initBeacon2(); //初始化信标位置
 
-        initWareHouse();    //初始化仓库类型
+        initWareHouse(); //初始化仓库类型
 
         measureMetalPos0(ROUND_2); //测量金属位置
 
         // int32_t pointNo = 0;    //点的序号
         // int32_t whouseNo = wareHouse[1].type;   //信标的仓库类型
 
-        while(isEnable()){
+        while (isEnable())
+        {
 
             go2Point(getBestPoint());
 
-            if(!isEnable()){
+            if (!isEnable())
+            {
                 return;
             }
 
-            if(getGameTime() > 100 || getCarMineSumNum() == 10)
+            if (getGameTime() > 100 || getCarMineSumNum() == 10)
             {
                 send2WareHouseLAZY();
             }
@@ -70,52 +72,72 @@ void loop2()
         //         delay_ms(10);
         //     }
         // }
-        
     }
     delay_ms(10);
 }
 
-//Pos findWHouse(int8_t )
+// Pos findWHouse(int8_t )
 
 int16_t getCarMineNumByType(int16_t type)
 {
-    if (type==0)
+    if (type == 0)
         return getCarMineANum();
-    else if(type==1)
+    else if (type == 1)
         return getCarMineBNum();
-    else if (type==2)
+    else if (type == 2)
         return getCarMineCNum();
-    else if(type==3)
+    else if (type == 3)
         return getCarMineDNum();
-    else{
+    else
+    {
         return 0;
     }
 }
 
+bool waitUtilNumChange()
+{
+    //破釜沉舟的时候把它去掉
+    int16_t thisNum = getCarMineSumNum();
+    int16_t lastNum = getCarMineSumNum();
+    while (thisNum == lastNum)
+    {
+        // lastNum = thisNum;
+        thisNum = getCarMineSumNum();
+        if (!isEnable())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 void send2WareHouseLAZY()
 {
-    if(getCarMineNumByType(wareHouse[1].type) > 1 || getGameTime() > 100)
+    int16_t numToLoad = 3;
+    if (getCarMineNumByType(wareHouse[1].type) >= numToLoad || getGameTime() > 100)
     {
-        Pos dest = {wareHouse[1].x,wareHouse[1].y};
+        Pos dest = {wareHouse[1].x, wareHouse[1].y};
         go2Point(dest);
-        if(!isEnable()){
+        waitUtilNumChange();
+        if (!isEnable())
+        {
             return;
         }
     }
 
     for (int16_t i = 0; i < 3; i++)
     {
-        if (getCarMineNumByType(beacon[i].type) > 1 || getGameTime() > 100)
+        if (getCarMineNumByType(beacon[i].type) >= numToLoad || getGameTime() > 100)
         {
             Pos dest = {beacon[i].x, beacon[i].y};
             go2Point(dest);
-            if(!isEnable())
+            waitUtilNumChange();
+            if (!isEnable())
             {
                 return;
             }
         }
     }
-
 }
 
 int32_t getCar2PointTime(Object point)
@@ -131,9 +153,9 @@ int32_t getCar2PointTime(Object point)
 
 Pos getBestPoint()
 {
-    carPos = getCarPos();
+    carPos = getCarPosByRound();
     int32_t time0 = getCar2PointTime(metal[0]);
     int32_t time1 = getCar2PointTime(metal[1]);
     Pos metalPos[2] = {{metal[0].x, metal[0].y}, {metal[1].x, metal[1].y}};
-    return (time0 > time1) ? metalPos[0] : metalPos[1];
+    return (time0 < time1) ? metalPos[0] : metalPos[1];
 }

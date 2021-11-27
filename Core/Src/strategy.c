@@ -32,12 +32,12 @@ void initWareHouse()
     }
 }
 
-void measureMetalPos0(uint8_t round)
+void measureMetalPos0()
 {
     Pos mPoints[3];            //三个测量点
     int32_t mIntensity[2][3]; //三个强度值
 
-    mPoints[0] = (round == ROUND_1) ? getCarPos() : getCarPosByBeacon();
+    mPoints[0] = getCarPosByRound();
     mIntensity[0][0] = getMineIntensity(0);
     mIntensity[1][0] = getMineIntensity(1);
 
@@ -45,7 +45,7 @@ void measureMetalPos0(uint8_t round)
     dest1.x = mPoints[0].x + TRI_D_M, dest1.y = mPoints[0].y;
     go2Point(dest1);
 
-    mPoints[1] = (round == ROUND_1) ? getCarPos() : getCarPosByBeacon();
+    mPoints[1] = getCarPosByRound();
     mIntensity[0][1] = getMineIntensity(0);
     mIntensity[1][1] = getMineIntensity(1);
 
@@ -53,7 +53,7 @@ void measureMetalPos0(uint8_t round)
     dest2.x = mPoints[0].x - TRI_D_M * 0.5, dest2.y = mPoints[0].y + TRI_D_M * 0.866;
     go2Point(dest2);
 
-    mPoints[2] = (round == ROUND_1) ? getCarPos() : getCarPosByBeacon();
+    mPoints[2] = getCarPosByRound();
     mIntensity[0][2] = getMineIntensity(0);
     mIntensity[1][2] = getMineIntensity(1);
 
@@ -62,6 +62,17 @@ void measureMetalPos0(uint8_t round)
 
     metal[0].x = m1.x, metal[0].y = m1.y;
     metal[1].x = m2.x, metal[1].y = m2.y;
+}
+
+Pos getCarPosByRound()
+{
+    if(getIsCarPosValid())
+    {
+        return getCarPos();
+    }
+    else{
+        return getCarPosByBeacon();
+    }
 }
 
 
@@ -75,13 +86,13 @@ void measureMetalPos()
     mIntensity[0][0] = getMineIntensity(0);
     mIntensity[1][0] = getMineIntensity(1);
 
-    move(angle0, (float)TRI_D_M);
+    move(angle0, (float)TRI_D_M, (float)SPEED);
 
     mPoints[1] =  getCarPosByBeacon();
     mIntensity[0][1] = getMineIntensity(0);
     mIntensity[1][1] = getMineIntensity(1);
 
-    move(angle0 + 60, (float)-TRI_D_M);
+    move(angle0 + 60, (float)TRI_D_M, (float)(-SPEED));
 
     mPoints[2] =  getCarPosByBeacon();
     mIntensity[0][2] = getMineIntensity(0);
@@ -94,7 +105,7 @@ void measureMetalPos()
     metal[1].x = m2.x, metal[1].y = m2.y;
 }
 
-bool move(float angle, float distance)
+bool move(float angle, float distance, float speed)
 {
     setAngle(angle);
     while (!isAngleCompleted())
@@ -108,7 +119,7 @@ bool move(float angle, float distance)
         delay_ms(10);
     } //转角度
 
-    (distance < 0) ? setSpeedStraight(-SPEED, -distance) : setSpeedStraight(SPEED, distance);
+    //(distance < 0) ? setSpeedStraight(-SPEED, -distance) : setSpeedStraight(SPEED, distance);
 
     // setSpeedStraight(SPEED, distance);
 
@@ -128,7 +139,7 @@ bool move(float angle, float distance)
 
 void go2Point(Pos dest)
 {
-    Pos curPos = getCarPos();
+    Pos curPos = getCarPosByRound();
 
     Pos relaPos;
     relaPos.x = dest.x - curPos.x;
@@ -143,7 +154,7 @@ void go2Point(Pos dest)
 
     if (fabs(difAngle) > 90)
     {
-        if (!move(180 + relaAngle, -distance))
+        if (!move(180 + relaAngle, distance, (float)(-SPEED)))
         {
             return;
         }
@@ -151,7 +162,7 @@ void go2Point(Pos dest)
 
     else
     {
-        if (!move(relaAngle, distance))
+        if (!move(relaAngle, distance, (float)SPEED))
         {
             return;
         }

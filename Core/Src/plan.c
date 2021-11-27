@@ -124,7 +124,7 @@ void getBestPlan(Object *points, Object *b_p)
     //     return;
     // } //遍历不能超过五个点
     int32_t num = 5;
-    curPos = getCarPos();
+    curPos = getCarPosByRound();
     best_time = 2147483640, best_iw = 0;
     permutation_cpw(0, num, points, b_p);
     b_p[5].x = wareHouse[best_iw].x, b_p[5].y = wareHouse[best_iw].y;
