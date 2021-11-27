@@ -5,6 +5,7 @@
 #include "main.h"
 #include "tim.h"
 #include "zigbee.h"
+#include "round1.h"
 
 volatile float speedStraight = 0.0;
 volatile int32_t cnt4Goal = 0;
@@ -16,19 +17,24 @@ bool angleCompletedLastflag = false;
 #pragma pack(1)
 struct {
     uint8_t head;
-    float LB;
-    float LF;
-    float RF;
-    float RB;
+    // float LB;
+    // float LF;
+    // float RF;
+    // float RB;
     float angle;
     float dis;
     float CarPosX;
     float CarPosY;
-    float MineIntensity0;
-    //float MineIntensity1;
-    float MyBeaconPosY0;
-    float MyBeaconPosX0;
-    float DistanceOfMyBeacon;
+    // float MineIntensity0;
+    float Metal0X;
+    float Metal0Y;
+    float Metal1X;
+    float Metal1Y;
+    // float MyBeaconPosX0;
+    // float MyBeaconPosY0;
+    // float DistanceOfMyBeacon;
+    float destX;
+    float destY;
 } testDataBuf;
 #pragma pack()
 
@@ -83,19 +89,24 @@ void CTRL_After_Callback(void) {
 
     if (UART_COMM.gState == HAL_UART_STATE_READY) {
         testDataBuf.head = 0xAA;
-        testDataBuf.LB = pidLB.realstate;
-        testDataBuf.LF = pidLF.realstate;
-        testDataBuf.RF = pidRF.realstate;
-        testDataBuf.RB = pidRB.realstate;
+        // testDataBuf.LB = pidLB.realstate;
+        // testDataBuf.LF = pidLF.realstate;
+        // testDataBuf.RF = pidRF.realstate;
+        // testDataBuf.RB = pidRB.realstate;
         testDataBuf.angle = getRealAngle();
         testDataBuf.dis = cnt4Real / DIS2CNT4_AVE;
-        testDataBuf.CarPosX = getCarPosX();
-        testDataBuf.CarPosY = getCarPosY();
-        testDataBuf.MineIntensity0 = getMineIntensity(0);
-        //testDataBuf.MineIntensity1 = getMineIntensity(1);
-        testDataBuf.MyBeaconPosX0 = getMyBeaconPosX(0);
-        testDataBuf.MyBeaconPosY0 = getMyBeaconPosY(0);
-        testDataBuf.DistanceOfMyBeacon = getDistanceOfMyBeacon(0);
+        testDataBuf.CarPosX = (float)getCarPosX();
+        testDataBuf.CarPosY = (float)getCarPosY();
+        // testDataBuf.MineIntensity0 = (float)getMineIntensity(0);
+        // testDataBuf.MyBeaconPosX0 = (float)getMyBeaconPosX(0);
+        // testDataBuf.MyBeaconPosY0 = (float)getMyBeaconPosY(0);
+        // testDataBuf.DistanceOfMyBeacon = (float)getDistanceOfMyBeacon(0);
+        testDataBuf.Metal0X = metal[0].x;
+        testDataBuf.Metal0Y = metal[0].y;
+        testDataBuf.Metal1X = metal[1].x;
+        testDataBuf.Metal1Y = metal[1].y;
+        testDataBuf.destX = (float)dest.x;
+        testDataBuf.destY = (float)dest.y;
 
         uwrite_DMA(&UART_COMM, (uint8_t*)&testDataBuf, sizeof(testDataBuf));
         // uwrite_DMA(&UART_COMM, gyroMessage.buf, sizeof(gyroMessage));

@@ -3,6 +3,14 @@
 
 #include"value.h"
 
+extern Pos carPos; //小车当前位置，由到信标距离算的
+
 void loop2();
+
+void initBeacon2(); //初始化信标位置
+
+Pos getBestPoint();
+
+void send2WareHouse();  //把金属送到仓库
 
 #endif

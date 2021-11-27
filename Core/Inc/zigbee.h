@@ -39,120 +39,120 @@ void zigbeeSend(int MineType);
 /**
  * @brief 获取比赛时间，单位为0.1s,范围为0-120s
  */
-uint16_t getGameTime(void);
+int32_t getGameTime(void);
 /**
  * @brief 获取比赛状态，0为未开始，1为进行中，2为暂停，3为已结束
  */
-uint8_t getGameState(void);			
+int32_t getGameState(void);			
 /**
  * @brief 获取车辆任务状态，0为上半场，1为下半场
  */
-uint16_t getCarTask(void);
+int32_t getCarTask(void);
 /**
  * @brief 获取金矿强度是否有效 有效为1，无效为0
  * @param MineNo 场上金属序号：0,1
  */
-uint16_t getIsMineIntensityValid(int MineNo);
+int32_t getIsMineIntensityValid(int MineNo);
 /**
  * @brief 获取场上2个金矿的种类
  * @param MineNo 场上金属序号：0,1
  */
-uint16_t getMineArrayType(int MineNo);  
+int32_t getMineArrayType(int MineNo);  
 /**
  * @brief 获取8个停车点能够存储的金矿种类
  * @param ParkDotNo 八个仓库序号：0-7
  */              
-uint16_t getParkDotMineType(int ParkDotNo);       
+int32_t getParkDotMineType(int ParkDotNo);       
 /**
  * @brief 获取3个己方信标充当仓库可存储的金矿类型
  * @param BeaconNo 信标序号0-2
  */         
-uint16_t getMyBeaconMineType(int BeaconNo);      
+int32_t getMyBeaconMineType(int BeaconNo);      
 /**
  * @brief 获取车辆目前载有金矿的总数目
  */           
-uint16_t getCarMineSumNum(void);   
+int32_t getCarMineSumNum(void);   
 /**
  * @brief  获取车辆目前载有金矿A的数目
  */                             
-uint16_t getCarMineANum(void);             
+int32_t getCarMineANum(void);             
 /**
  * @brief 获取车辆目前载有金矿B的数目
  */                  
-uint16_t getCarMineBNum(void);   
+int32_t getCarMineBNum(void);   
 /**
  * @brief  获取车辆目前载有金矿C的数目
  */                             
-uint16_t getCarMineCNum(void);    
+int32_t getCarMineCNum(void);    
 /**
  * @brief 获取车辆目前载有金矿D的数目
  */                           
-uint16_t getCarMineDNum(void);    
+int32_t getCarMineDNum(void);    
 /**
  * @brief  获取小车x坐标
  */                            
-uint16_t getCarPosX(void);	
+int32_t getCarPosX(void);	
 /**
  * @brief 获取小车y坐标
  */	        
-uint16_t getCarPosY(void);		
+int32_t getCarPosY(void);		
 /**
  * @brief 获取小车中心处的两金矿强度
  * @param MineNo 场上金属序号：0,1
  */	                           
-uint32_t getMineIntensity(int MineNo);    
+int32_t getMineIntensity(int MineNo);    
     /**
  * @brief 获取小车到己方3个信标的距离
  * @param BeaconNo 信标序号 0-2
  */	            
-uint16_t getDistanceOfMyBeacon(int BeaconNo); 
+int32_t getDistanceOfMyBeacon(int BeaconNo); 
     /**
  * @brief 获取己方3个信标的x坐标
  * @param BeaconNo 信标序号 0-2
  */	      
-uint16_t getMyBeaconPosX(int BeaconNo);  
+int32_t getMyBeaconPosX(int BeaconNo);  
     /**
  * @brief 获取己方3个信标的y坐标
  * @param BeaconNo 信标序号 0-2
  */	          
-uint16_t getMyBeaconPosY(int BeaconNo);   
+int32_t getMyBeaconPosY(int BeaconNo);   
     /**
  * @brief 获取小车到对方3个信标的距离
  * @param BeaconNo 信标序号 0-2
  */	           
-uint16_t getDistanceOfRivalBeacon(int BeaconNo);  
+int32_t getDistanceOfRivalBeacon(int BeaconNo);  
     /**
  * @brief 获取对方3个信标的x坐标
  *  @param BeaconNo 信标序号 0-2
  */	   
-uint16_t getRivalBeaconPosX(int BeaconNo);        
+int32_t getRivalBeaconPosX(int BeaconNo);        
     /**
  * @brief 获取对方3个信标的y坐标
  *  @param BeaconNo 信标序号 0-2
  */	   
-uint16_t getRivalBeaconPosY(int BeaconNo);        
+int32_t getRivalBeaconPosY(int BeaconNo);        
     /**
  * @brief 获取车辆所在区域信息，0为周边道路，1为中央矿区
  */	   
-uint16_t getCarZone(void);       
+int32_t getCarZone(void);       
     /**
  * @brief 获取车辆位置信息是否有效
  */	                                 
-uint16_t getIsCarPosValid(void);                    
+int32_t getIsCarPosValid(void);                    
     /**
  * @brief 获取小车到己方3个信标距离（信标坐标）是否有效
  *  @param BeaconNo 信标序号 0-2
  */	           
-uint16_t getIsDistanceOfMyBeaconValid(int BeaconNo); 
+int32_t getIsDistanceOfMyBeaconValid(int BeaconNo); 
     /**
  * @brief 获取小车到对方3个信标距离（信标坐标）是否有效
  *  @param BeaconNo 信标序号 0-2
  */	       
-uint16_t getIsDistanceOfRivalBeaconValid(int BeaconNo);  
+int32_t getIsDistanceOfRivalBeaconValid(int BeaconNo);  
       /**
  * @brief 获取车辆得分
  */	 
-int16_t getCarScore(void);            
+int32_t getCarScore(void);            
     /**
  * @brief 获取小车位置
  */	                        

@@ -33,6 +33,7 @@
 #include "gyro.h"
 #include "ctrl.h"
 #include "round1.h"
+#include "round2.h"
 #include "zigbee.h"
 /* USER CODE END Includes */
 
@@ -132,7 +133,7 @@ void loop(void) {
   //   setSpeedStraight0();
     // // 转弯前角度
     // float angle0 = getRealAngle();
-    
+
   // if (HAL_GPIO_ReadPin(pinEnable_GPIO_Port, pinEnable_Pin) != GPIO_PIN_RESET) {
   //   ++maintestcount;
   //   if (maintestcount >= 5) {
@@ -200,14 +201,33 @@ void loop(void) {
     // // 防过热暂停
     // delay_ms(1000);
   // }
-  while(getGameState() == 0){}
+  while(getGameState() == 0){
+    setSpeedStraight0();
+    setAngle(getRealAngle());
+    delay_ms(10);
+  }
 
   if(getCarTask() == ROUND_1){
-      loop1();
+    loop1();
+    // Pos dest;
+    // dest.x = 50,dest.y = 0;
+    // go2Point(dest);
+    // dest.x = -25, dest.y = 25 * 1.7;
+    // go2Point(dest);
+    // dest.x = -25, dest.y = -25 * 1.7;
+    // go2Point(dest);
+    // int32_t i = 0;
+    // for (i = 0; i < 100; ++i)
+    // {
+    //   if (isEnable())
+    //   {
+    //     delay_ms(10);
+    //   }
+    // }
   }
 
   else if (getCarTask() == ROUND_2){
-
+    loop2();
   }
   
 }

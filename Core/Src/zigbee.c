@@ -65,266 +65,269 @@ void zigbeeSend(int MineType)
 	HAL_UART_Transmit(zigbee_huart,zigbeeMessageSend+MineType,1,HAL_MAX_DELAY);
 }
 
-uint16_t getGameTime(void) 
+int32_t getGameTime(void) 
 {
-	return (zigbeeMessage[0] << 8) + zigbeeMessage[1];
+	return (int32_t)((zigbeeMessage[0] << 8) + zigbeeMessage[1]);
 }
 
-uint8_t getGameState(void)
+int32_t getGameState(void)
 {
-	return (uint8_t)((zigbeeMessage[2] & 0xC0) >> 6);
+	return (int32_t)((zigbeeMessage[2] & 0xC0) >> 6);
 }
 
-uint16_t getCarTask(void)
+int32_t getCarTask(void)
 {
-	return (uint16_t)((zigbeeMessage[2] & 0x20) >> 5);
+	//return 0;
+	return (int32_t)((zigbeeMessage[2] & 0x20) >> 5);
 }
 
-uint16_t getIsMineIntensityValid(int MineNo) {
+int32_t getIsMineIntensityValid(int MineNo) {
 	if (MineNo == 0 )
 	{
-		return (uint16_t)((zigbeeMessage[2] &0x10) >>4 );
+		return (int32_t)((zigbeeMessage[2] &0x10) >>4 );
 	}
 	else if(MineNo == 1)
 	{
-		return (uint16_t)((zigbeeMessage[2] &0x08) >>3);
+		return (int32_t)((zigbeeMessage[2] &0x08) >>3);
 	}
 	else
 	{	
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)INVALID_ARG;
 	}
 }
 
-uint16_t getCarPosX()
+int32_t getCarPosX()
 {
-	return (uint16_t)(zigbeeMessage[3]);
+	return (int32_t)(zigbeeMessage[3]);
 }
 
-uint16_t getCarPosY()
+int32_t getCarPosY()
 {
-	return (uint16_t)(zigbeeMessage[4]);
+	return (int32_t)(uint16_t)(zigbeeMessage[4]);
 }
 
-uint16_t getMineArrayType(int MineNo) {
+int32_t getMineArrayType(int MineNo) {
 	if (MineNo == 0)
 	{
-		return (uint16_t)((zigbeeMessage[5] & 0xC0) >> 6);
+		return (int32_t)(uint16_t)((zigbeeMessage[5] & 0xC0) >> 6);
 	
 	}
 	else if(MineNo == 1)
 	{	
-		return (uint16_t)((zigbeeMessage[5] & 0x30) >> 4);
+		return (int32_t)(uint16_t)((zigbeeMessage[5] & 0x30) >> 4);
 	}
 	else 
 	{
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	}
 }
 
-uint16_t getCarMineSumNum(void) 
+int32_t getCarMineSumNum(void) 
 {
-	return (uint16_t)(zigbeeMessage[5] & 0x0F);
+	return (int32_t)(uint16_t)(zigbeeMessage[5] & 0x0F);
 }
 
-uint16_t getCarMineANum(void) 
+int32_t getCarMineANum(void) 
 {
-	return (uint16_t)((zigbeeMessage[6] & 0xF0) >> 4);
+	return (int32_t)(uint16_t)((zigbeeMessage[6] & 0xF0) >> 4);
 }
 
-uint16_t getCarMineBNum(void) 
+int32_t getCarMineBNum(void) 
 {
-	return (uint16_t)(zigbeeMessage[6] & 0x0F);
+	return (int32_t)(uint16_t)(zigbeeMessage[6] & 0x0F);
 }
 
-uint16_t getCarMineCNum(void)
+int32_t getCarMineCNum(void)
 {
-	return (uint16_t)((zigbeeMessage[7] & 0xF0) >> 4);
+	return (int32_t)(uint16_t)((zigbeeMessage[7] & 0xF0) >> 4);
 }
 
-uint16_t getCarMineDNum(void) 
+int32_t getCarMineDNum(void) 
 {
-	return (uint16_t)(zigbeeMessage[7] & 0x0F);
+	return (int32_t)(uint16_t)(zigbeeMessage[7] & 0x0F);
 }
 
-uint16_t getMyBeaconMineType(int MineType)
+int32_t getMyBeaconMineType(int MineType)
 {
 	if (MineType == 0 )
 	{	
-		return (uint16_t)((zigbeeMessage[8] & 0xC0) >> 6);
+		return (int32_t)(uint16_t)((zigbeeMessage[8] & 0xC0) >> 6);
 	}
 	else if(MineType == 1)
 	{
-		return (uint16_t)((zigbeeMessage[8] & 0x30) >> 4);
+		return (int32_t)(uint16_t)((zigbeeMessage[8] & 0x30) >> 4);
 	}
 	else if(MineType == 2)
 	{
-		return (uint16_t)((zigbeeMessage[8] & 0x0C) >> 2);
+		return (int32_t)(uint16_t)((zigbeeMessage[8] & 0x0C) >> 2);
 	}
 	else 
 	{
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	}
 }
 
-uint32_t getMineIntensity(int MineNo)
+int32_t getMineIntensity(int MineNo)
 {
 	if (MineNo == 0 || MineNo == 1)
 	{
-		return (uint32_t)((zigbeeMessage[9+4*MineNo] << 24) + (zigbeeMessage[10 + 4 * MineNo] << 16) + (zigbeeMessage[11 + 4 * MineNo] << 8) + (zigbeeMessage[12 + 4 * MineNo]));
+		return (int32_t)(uint32_t)((zigbeeMessage[9+4*MineNo] << 24) + (zigbeeMessage[10 + 4 * MineNo] << 16) + (zigbeeMessage[11 + 4 * MineNo] << 8) + (zigbeeMessage[12 + 4 * MineNo]));
 	}
 	else
 	{
-		return (uint32_t)INVALID_ARG;
+		return (int32_t)(uint32_t)INVALID_ARG;
 	}	
 }
 
-uint16_t getDistanceOfMyBeacon(int BeaconNo) {
+int32_t getDistanceOfMyBeacon(int BeaconNo) {
 	if (BeaconNo != 0 && BeaconNo != 1 && BeaconNo != 2)
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	else
-		return (uint16_t)((zigbeeMessage[17+2*BeaconNo] << 8) + zigbeeMessage[18+2*BeaconNo]);
+		return (int32_t)(uint16_t)((zigbeeMessage[17+2*BeaconNo] << 8) + zigbeeMessage[18+2*BeaconNo]);
 }
 
-uint16_t getDistanceOfRivalBeacon(int BeaconNo) {
+int32_t getDistanceOfRivalBeacon(int BeaconNo) {
 	if (BeaconNo != 0 && BeaconNo != 1 && BeaconNo != 2)
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	else
-		return (uint16_t)((zigbeeMessage[23+2*BeaconNo] << 8) + zigbeeMessage[24+2*BeaconNo]);
+		return (int32_t)(uint16_t)((zigbeeMessage[23+2*BeaconNo] << 8) + zigbeeMessage[24+2*BeaconNo]);
 }
 
-uint16_t getParkDotMineType(int ParkDotNo) 
+int32_t getParkDotMineType(int ParkDotNo) 
 {
 	if (ParkDotNo < 0 || ParkDotNo > 7)
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	else
 		switch (ParkDotNo)
 		{
-		case 0: return (uint16_t)((zigbeeMessage[29] & 0xC0) >> 6);break;
-	    case 1: return (uint16_t)((zigbeeMessage[29] & 0x30) >> 4);break;
-		case 2: return (uint16_t)((zigbeeMessage[29] & 0x0C) >> 2);break;
-		case 3: return (uint16_t)((zigbeeMessage[29] & 0x03));break;
-		case 4: return (uint16_t)((zigbeeMessage[30] & 0xC0) >> 6);break;
-		case 5: return (uint16_t)((zigbeeMessage[30] & 0x30) >> 4);break;
-		case 6: return (uint16_t)((zigbeeMessage[30] & 0x0C) >> 2);break;
-		case 7: return (uint16_t)((zigbeeMessage[30] & 0x03));break;
+		case 0: return (int32_t)(uint16_t)((zigbeeMessage[29] & 0xC0) >> 6);break;
+	    case 1: return (int32_t)(uint16_t)((zigbeeMessage[29] & 0x30) >> 4);break;
+		case 2: return (int32_t)(uint16_t)((zigbeeMessage[29] & 0x0C) >> 2);break;
+		case 3: return (int32_t)(uint16_t)((zigbeeMessage[29] & 0x03));break;
+		case 4: return (int32_t)(uint16_t)((zigbeeMessage[30] & 0xC0) >> 6);break;
+		case 5: return (int32_t)(uint16_t)((zigbeeMessage[30] & 0x30) >> 4);break;
+		case 6: return (int32_t)(uint16_t)((zigbeeMessage[30] & 0x0C) >> 2);break;
+		case 7: return (int32_t)(uint16_t)((zigbeeMessage[30] & 0x03));break;
 		default:
-			return (uint16_t)((zigbeeMessage[30] & 0x03));
+			return (int32_t)(uint16_t)((zigbeeMessage[30] & 0x03));
 		}
 }
 
-uint16_t getCarZone(void) {
-	return (uint16_t)((zigbeeMessage[31] & 0x80) >> 7);
+int32_t getCarZone(void) {
+	return (int32_t)(uint16_t)((zigbeeMessage[31] & 0x80) >> 7);
 }
 
-uint16_t getIsCarPosValid(void) {
-	return (uint16_t)((zigbeeMessage[31] & 0x40) >> 6);
+int32_t getIsCarPosValid(void) {
+	return (int32_t)(uint16_t)((zigbeeMessage[31] & 0x40) >> 6);
 }
 
-uint16_t getIsDistanceOfMyBeaconValid(int BeaconNo) {
+int32_t getIsDistanceOfMyBeaconValid(int BeaconNo) {
 	if (BeaconNo == 0 )
 	{
-		return (uint16_t)((zigbeeMessage[31]& 0x20) >> 5);
+		return (int32_t)(uint16_t)((zigbeeMessage[31]& 0x20) >> 5);
 	}
 	else if(BeaconNo == 1)
 	{
-		return (uint16_t)((zigbeeMessage[31] & 0x10) >> 4);
+		return (int32_t)(uint16_t)((zigbeeMessage[31] & 0x10) >> 4);
 	}
 	else if(BeaconNo == 2)
 	{
-		return (uint16_t)((zigbeeMessage[31] & 0x08) >> 3);
+		return (int32_t)(uint16_t)((zigbeeMessage[31] & 0x08) >> 3);
 	}
 	else 
 	{
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	}		
 }
 
-uint16_t getIsDistanceOfRivalBeaconValid(int BeaconNo) {
+int32_t getIsDistanceOfRivalBeaconValid(int BeaconNo) {
 	if (BeaconNo == 0 )
 	{
-		return (uint16_t)((zigbeeMessage[31]& 0x04) >> 2);
+		return (int32_t)(uint16_t)((zigbeeMessage[31]& 0x04) >> 2);
 	}
 	else if(BeaconNo == 1)
 	{
-		return (uint16_t)((zigbeeMessage[31] & 0x02) >> 1);
+		return (int32_t)(uint16_t)((zigbeeMessage[31] & 0x02) >> 1);
 	}
 	else if(BeaconNo == 2)
 	{
-		return (uint16_t)((zigbeeMessage[31] & 0x01));
+		return (int32_t)(uint16_t)((zigbeeMessage[31] & 0x01));
 	}
 	else 
 	{
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	}
 }
 
-int16_t getCarScore(void) {
-	return (int16_t)((int8_t)(zigbeeMessage[32]<<8) + zigbeeMessage[33] );
+int32_t getCarScore(void) {
+	return (int32_t)(int16_t)((int8_t)(zigbeeMessage[32]<<8) + zigbeeMessage[33] );
 }
 
-uint16_t getMyBeaconPosX(int BeaconNo)
+int32_t getMyBeaconPosX(int BeaconNo)
 {
 	if(BeaconNo !=0 && BeaconNo != 1 && BeaconNo != 2)
 	{
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	}
 	else
 	{
-		return (uint16_t)(zigbeeMessage[34 + 2 * BeaconNo]);
+		return (int32_t)(uint16_t)(zigbeeMessage[34 + 2 * BeaconNo]);
 	}
 }
 
-uint16_t getMyBeaconPosY(int BeaconNo)
+int32_t getMyBeaconPosY(int BeaconNo)
 {
 	if(BeaconNo !=0 && BeaconNo != 1 && BeaconNo != 2)
 	{
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	}
 	else
 	{
-		return (uint16_t)(zigbeeMessage[35 + 2 * BeaconNo]);
+		return (int32_t)(uint16_t)(zigbeeMessage[35 + 2 * BeaconNo]);
 	}
 }
 
-uint16_t getRivalBeaconPosX(int BeaconNo)
+int32_t getRivalBeaconPosX(int BeaconNo)
 {
 	if(BeaconNo !=0 && BeaconNo != 1 && BeaconNo != 2)
 	{
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	}
 	else
 	{
-		return (uint16_t)(zigbeeMessage[40 + 2 * BeaconNo]);
+		return (int32_t)(uint16_t)(zigbeeMessage[40 + 2 * BeaconNo]);
 	}
 }
 
-uint16_t getRivalBeaconPosY(int BeaconNo)
+int32_t getRivalBeaconPosY(int BeaconNo)
 {
 	if(BeaconNo !=0 && BeaconNo != 1 && BeaconNo != 2)
 	{
-		return (uint16_t)INVALID_ARG;
+		return (int32_t)(uint16_t)INVALID_ARG;
 	}
 	else
 	{
-		return (uint16_t)(zigbeeMessage[41 + 2 * BeaconNo]);
+		return (int32_t)(uint16_t)(zigbeeMessage[41 + 2 * BeaconNo]);
 	}
 }
 
 Pos getCarPos(void)
 {
-	Pos a = {getCarPosX(),getCarPosY()};
+	/* test*/
+	Pos a = {(int32_t)getCarPosX(),(int32_t)getCarPosY()};
+
 	return a;
 }
 
 Pos getRivalBeaconPos(int BeaconNo)
 {
-	Pos a = {getRivalBeaconPosX(BeaconNo), getRivalBeaconPosY(BeaconNo)};
+	Pos a = {(int32_t)getRivalBeaconPosX(BeaconNo), (int32_t)getRivalBeaconPosY(BeaconNo)};
 	return a;
 }
 
 Pos getMyBeaconPos(int BeaconNo)
 {
-	Pos a = {getMyBeaconPosX(BeaconNo), getMyBeaconPosY(BeaconNo)};
+	Pos a = {(int32_t)getMyBeaconPosX(BeaconNo), (int32_t)getMyBeaconPosY(BeaconNo)};
 	return a;
 }
 

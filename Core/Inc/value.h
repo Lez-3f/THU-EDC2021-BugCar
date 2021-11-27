@@ -3,22 +3,23 @@
 */
 #ifndef _VALUE_H_
 #define _VALUE_H_
+#include <stdint.h>
 
 typedef struct
 {
-    int x, y;
+    int32_t x, y;
 }Pos;
 
 typedef struct
 {
-    int x, y;
+    int32_t x, y;
     char type;
 }Object;
 
 typedef struct
 {
-    int x, y;
-    int vec[2];
+    int32_t x, y;
+    int32_t vec[2];
 }Car;
 
 #endif
