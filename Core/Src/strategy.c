@@ -10,6 +10,8 @@
 #define PW2(X) ((X) * (X))
 #define A 1e9
 
+int32_t metalNum = 0;
+
 Object wareHouse[8] = {{15, 15}, {127, 15}, {239, 15}, {239, 127}, {239, 239}, {127, 239}, {15, 239}, {15, 127}}; // warehouse
 Object metal[2] = {{10, 10, 'A'}, {11, 11, 'A'}};
 Object beacon[3] = {
@@ -18,6 +20,8 @@ Object beacon[3] = {
     {0, 0, 'N'}};
 
 Pos carPos = {0, 0};
+
+Pos CurrDest;
 
 bool isEnable()
 {
@@ -34,7 +38,7 @@ void initWareHouse()
 
 void measureMetalPos0()
 {
-    Pos mPoints[3];            //三个测量点
+    Pos mPoints[3];           //三个测量点
     int32_t mIntensity[2][3]; //三个强度值
 
     mPoints[0] = getCarPosByRound();
@@ -43,6 +47,7 @@ void measureMetalPos0()
 
     Pos dest1;
     dest1.x = mPoints[0].x + TRI_D_M, dest1.y = mPoints[0].y;
+    // dest1.x = mPoints[0].x - TRI_D_M * 0.5, dest1.y = mPoints[0].y + TRI_D_M * 0.866;
     go2Point(dest1);
 
     mPoints[1] = getCarPosByRound();
@@ -50,7 +55,8 @@ void measureMetalPos0()
     mIntensity[1][1] = getMineIntensity(1);
 
     Pos dest2;
-    dest2.x = mPoints[0].x - TRI_D_M * 0.5, dest2.y = mPoints[0].y + TRI_D_M * 0.866;
+    dest2.x = mPoints[0].x + TRI_D_M * 0.5, dest2.y = mPoints[0].y + TRI_D_M * 0.866;
+    // dest2.x = mPoints[0].x, dest2.y = mPoints[0].y + TRI_D_M * 0.866;
     go2Point(dest2);
 
     mPoints[2] = getCarPosByRound();
@@ -66,35 +72,35 @@ void measureMetalPos0()
 
 Pos getCarPosByRound()
 {
-    if(getIsCarPosValid())
+    if (getIsCarPosValid())
     {
         return getCarPos();
     }
-    else{
+    else
+    {
         return getCarPosByBeacon();
     }
 }
 
-
 void measureMetalPos()
 {
-    Pos mPoints[3]; //三个测量点
-    int32_t mIntensity[2][3];  //三个强度值
+    Pos mPoints[3];           //三个测量点
+    int32_t mIntensity[2][3]; //三个强度值
     float angle0 = getRealAngle();
 
-    mPoints[0] =  getCarPosByBeacon();
+    mPoints[0] = getCarPosByBeacon();
     mIntensity[0][0] = getMineIntensity(0);
     mIntensity[1][0] = getMineIntensity(1);
 
     move(angle0, (float)TRI_D_M, (float)SPEED);
 
-    mPoints[1] =  getCarPosByBeacon();
+    mPoints[1] = getCarPosByBeacon();
     mIntensity[0][1] = getMineIntensity(0);
     mIntensity[1][1] = getMineIntensity(1);
 
     move(angle0 + 60, (float)TRI_D_M, (float)(-SPEED));
 
-    mPoints[2] =  getCarPosByBeacon();
+    mPoints[2] = getCarPosByBeacon();
     mIntensity[0][2] = getMineIntensity(0);
     mIntensity[1][2] = getMineIntensity(1);
 
@@ -153,9 +159,7 @@ bool move(float angle, float distance, float speed)
         delay_ms(10);
     } //转角度
 
-    //(distance < 0) ? setSpeedStraight(-SPEED, -distance) : setSpeedStraight(SPEED, distance);
-
-    setSpeedStraight(SPEED, distance);
+    setSpeedStraight(speed, distance);
 
     while (!isDisCompleted())
     {
@@ -171,47 +175,161 @@ bool move(float angle, float distance, float speed)
     return true;
 }
 
+char checkTypeByPos(Pos dest)
+{
+    for (int i = 0; i < 2; ++i)
+    {
+        if (dest.x == metal[i].x && dest.y == metal[i].y)
+        {
+            return 'm';
+        }
+    }
+    for (int i = 0; i < 3; ++i)
+    {
+        if (dest.x == beacon[i].x && dest.y == beacon[i].y)
+        {
+            return 'b';
+        }
+    }
+    for (int i = 0; i < 8; ++i)
+    {
+        if (dest.x == wareHouse[i].x && dest.y == wareHouse[i].y)
+        {
+            return 'w';
+        }
+    }
+    return 'p';
+}
+
 void go2Point(Pos dest)
 {
-    Pos curPos = getCarPosByRound();
+    if(dest.x <5 || dest.y < 5 || dest.x>250||dest.y>250){
+        dest.x = 127;
+        dest.y  = 127;
+    }
+    CurrDest = dest;
+    char type = checkTypeByPos(dest);
+    metalNum = getCarMineSumNum();
 
-    Pos relaPos;
+    //先转一个角度
+    Pos curPos = getCarPosByRound();
+    Pos relaPos = {dest.x - curPos.x, dest.y - curPos.y};
+
+    float angle0 = getRealAngle();                              //获取当前车身角度
+    double relaAngle = -180 * atan2(relaPos.y, relaPos.x) / PI; //计算位移角度
+    bool isBackWards = fabs(ANGLE_NORM(relaAngle - angle0)) > 90;
+
+    // float distance = sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y)); //小车与目标点的距离
+    float angleturn = (isBackWards) ? 180 + relaAngle : relaAngle;
+    // float speed = (isBackWards) ? -SPEED : SPEED;
+
+    // if (!turnAngle(angleturn))
+    // {
+    //     return;
+    // }
+
+    // //转过去后再次计算
+    // curPos = getCarPosByRound();
+    // relaPos.x = dest.x - curPos.x, relaPos.y = dest.y - curPos.y;
+
+    // angle0 = getRealAngle();                             //获取当前车身角度
+    // relaAngle = -180 * atan2(relaPos.y, relaPos.x) / PI; //计算位移角度
+    // isBackWards = fabs(ANGLE_NORM(relaAngle - angle0)) > 90;
+
+    float distance = REV_PARAM * sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y)); //小车与目标点的距离
+    // angleturn = (isBackWards) ? 180 + relaAngle : relaAngle;
+    float speed = (isBackWards) ? -SPEED : SPEED;
+    if (distance < 50 && type == 'w')
+    {
+        speed = (isBackWards) ? -SPEED_SLOW: SPEED_SLOW;
+    }
+
+    if (!move(angleturn, distance, speed))
+    {
+        return;
+    }
+
+    // setSpeedStraight(speed, distance);
+
+    // while (isEnable())
+    // {
+    //     curPos = getCarPosByRound(); //更新当前坐标
+    //     relaPos.x = dest.x - curPos.x;
+    //     relaPos.y = dest.y - curPos.y;
+    //     distance = sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y));
+
+    //     angle0 = getRealAngle(); //更新当前车身角度
+
+    //     relaAngle = -180 * atan2(relaPos.y, relaPos.x) / PI; //计算位移角度
+    //     isBackWards = fabs(ANGLE_NORM(relaAngle - angle0)) > 90;
+    //     angleturn = (isBackWards) ? 180 + relaAngle : relaAngle;
+
+    //     setAngle(angleturn);
+
+    //     if (distance < 30)
+    //     {
+    //         speed = (isBackWards) ? -SPEED_SLOW : SPEED_SLOW;
+    //         setSpeedStraight(speed, distance);
+    //         break;
+    //     }
+
+    //     delay_ms(150);
+    // }
+
+    //慢速下再次设置
+    // delay_ms(150);               //保证接收到一次慢速下坐标
+
+    //到达目标点后检测，
+    curPos = getCarPosByRound();
     relaPos.x = dest.x - curPos.x;
     relaPos.y = dest.y - curPos.y;
+    distance = REV_PARAM * sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y));
 
-    float angle0 = getRealAngle(); //获取当前车身角度
-
-    double relaAngle = -180 * atan2(relaPos.y, relaPos.x) / PI; //计算位移角度
-    //float distance = sqrt(PW2(relaPos.x) + PW2(relaPos.y));     //小车的距离
-
-    float difAngle = ANGLE_NORM(relaAngle - angle0);
-
-    float angleturn = (fabs(difAngle) > 90) ? 180 + relaAngle : relaAngle;
-    if (!turnAngle(angleturn))
+    while (distance > 5)
     {
-        return;
-    } //转一定角度
+        //金属 数量变化
+        if (type == 'm')
+        {
+            if (getCarMineSumNum() > metalNum)
+            {
+                break;
+            }
+        }
+        //信标 1-退出， 2-继续
+        if (type == 'b')
+        {
+            if (getCarTask() == ROUND_1)
+            {
+                break;
+            }
+        }
 
-    curPos = getCarPosByRound(); //更新当前坐标
-    float distance = sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y));     //小车与目标点的距离
+        //仓库 继续
 
-    float speed = (distance > 20) ? SPEED : SPEED_SLOW;
-    speed = (fabs(difAngle) > 90) ? -speed : speed;
-    if (!goStraight(speed, distance))
-    {
-        return;
-    } //走到当前点
-    //未走到
-    curPos = getCarPosByRound();
+        // 测量点 退出
+        if (type == 'p')
+        {
+            break;
+        }
 
-    HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+        angle0 = getRealAngle();                             //更新当前车身角度
+        relaAngle = -180 * atan2(relaPos.y, relaPos.x) / PI; //计算位移角度
+        isBackWards = fabs(ANGLE_NORM(relaAngle - angle0)) > 90;
+        angleturn = (isBackWards) ? 180 + relaAngle : relaAngle;
+        speed = (isBackWards) ? -SPEED_SLOW : SPEED_SLOW;
+        if (!move(angleturn, distance, speed))
+        {
+            return;
+        }
+        curPos = getCarPosByRound(); //更新当前坐标
+        relaPos.x = dest.x - curPos.x;
+        relaPos.y = dest.y - curPos.y;
+        distance = REV_PARAM * sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y));
+    }
 
-    // distance = sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y));     //小车与目标点的距离
-    // if(distance > 6){
-    //     HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
-    //     go2Point(dest); //再次尝试
-    // }
-    
+    // setSpeedStraight0();
+    // setAngle(getRealAngle());
+    // delay_ms(2000);  //太慢了
 }
 
 Pos calMetPos(int32_t S[3], Pos P[3])

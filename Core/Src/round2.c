@@ -57,7 +57,7 @@ void loop2()
                 return;
             }
 
-            if (getGameTime() > 100)
+            if (getGameTime() > TIMETOEND)
             {
                 send2WareHouseLAZY();
             }
@@ -104,10 +104,15 @@ bool waitUtilNumChange()
     //破釜沉舟的时候把它去掉
     int16_t thisNum = getCarMineSumNum();
     int16_t lastNum = getCarMineSumNum();
+    int16_t start_time = getGameTime();
     while (thisNum == lastNum)
     {
         // lastNum = thisNum;
         thisNum = getCarMineSumNum();
+        if(getGameTime()>start_time+12)
+        {
+            break;
+        }
         if (!isEnable())
         {
             return false;
@@ -119,7 +124,11 @@ bool waitUtilNumChange()
 void send2WareHouseLAZY()
 {
     int16_t numToLoad = 3;
-    if (getCarMineNumByType(wareHouse[1].type) >= numToLoad || getGameTime() > 100)
+    if (getGameTime() > TIMETOEND)
+    {
+        numToLoad = 1;
+    }
+    if (getCarMineNumByType(wareHouse[1].type) >= numToLoad)
     {
         Pos dest = {wareHouse[1].x, wareHouse[1].y};
         go2Point(dest);
@@ -132,7 +141,7 @@ void send2WareHouseLAZY()
 
     for (int16_t i = 0; i < 3; i++)
     {
-        if (getCarMineNumByType(beacon[i].type) >= numToLoad || getGameTime() > 100)
+        if (getCarMineNumByType(beacon[i].type) >= numToLoad)
         {
             Pos dest = {beacon[i].x, beacon[i].y};
             go2Point(dest);

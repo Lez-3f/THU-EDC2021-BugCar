@@ -8,7 +8,6 @@
 
 extern uint8_t maintestcount;
 
-Pos dest;
 
 /**
  * @brief 信标初始化
@@ -66,7 +65,7 @@ void loop1()
 
         while (isEnable() && PointNo < 6)
         {
-
+            Pos dest;
             dest.x = b_p[PointNo].x, dest.y = b_p[PointNo].y;
             go2Point(dest);
             if (b_p[PointNo].type == 'N') //信标

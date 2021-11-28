@@ -7,7 +7,7 @@
 
 #define MAX_DISTANCE 600
 #define MIN_ROT_DELTA_SPEED 30
-#define ANGLE_COMPLETE_DELTA 3
+#define ANGLE_COMPLETE_DELTA 2
 #define ANGLE_QUICK_DELTA 10
 
 extern volatile float speedStraight;

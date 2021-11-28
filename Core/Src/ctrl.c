@@ -6,6 +6,7 @@
 #include "tim.h"
 #include "zigbee.h"
 #include "round1.h"
+#include "strategy.h"
 
 volatile float speedStraight = 0.0;
 volatile int32_t cnt4Goal = 0;
@@ -35,6 +36,8 @@ struct {
     // float DistanceOfMyBeacon;
     float destX;
     float destY;
+    float gametime;
+    float metalsum;
 } testDataBuf;
 #pragma pack()
 
@@ -95,8 +98,8 @@ void CTRL_After_Callback(void) {
         // testDataBuf.RB = pidRB.realstate;
         testDataBuf.angle = getRealAngle();
         testDataBuf.dis = cnt4Real / DIS2CNT4_AVE;
-        testDataBuf.CarPosX = (float)getCarPosX();
-        testDataBuf.CarPosY = (float)getCarPosY();
+        testDataBuf.CarPosX = (float)getCarPosByRound().x;
+        testDataBuf.CarPosY = (float)getCarPosByRound().y;
         // testDataBuf.MineIntensity0 = (float)getMineIntensity(0);
         // testDataBuf.MyBeaconPosX0 = (float)getMyBeaconPosX(0);
         // testDataBuf.MyBeaconPosY0 = (float)getMyBeaconPosY(0);
@@ -105,8 +108,10 @@ void CTRL_After_Callback(void) {
         testDataBuf.Metal0Y = metal[0].y;
         testDataBuf.Metal1X = metal[1].x;
         testDataBuf.Metal1Y = metal[1].y;
-        testDataBuf.destX = (float)dest.x;
-        testDataBuf.destY = (float)dest.y;
+        testDataBuf.destX = (float)CurrDest.x;
+        testDataBuf.destY = (float)CurrDest.y;
+        testDataBuf.gametime = (float)getGameTime();
+        testDataBuf.metalsum = (float)getCarMineSumNum();
 
         uwrite_DMA(&UART_COMM, (uint8_t*)&testDataBuf, sizeof(testDataBuf));
         // uwrite_DMA(&UART_COMM, gyroMessage.buf, sizeof(gyroMessage));

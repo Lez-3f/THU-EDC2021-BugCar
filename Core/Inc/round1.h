@@ -4,7 +4,6 @@
 #include"value.h"
 
 extern Object metal[2], beacon[3];
-extern Pos dest;
 
 void loop1();
 

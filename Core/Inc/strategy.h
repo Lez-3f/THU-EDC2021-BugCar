@@ -8,16 +8,22 @@
 #include"value.h"
 #include<stdbool.h>
 #define SPEED 50
-#define SPEED_SLOW 20
+#define SPEED_SLOW 15
 
 /* 通信定义 */
 
 #define ROUND_1 0
 #define ROUND_2 1
 
+#define REV_PARAM 0.95
+
 extern Object wareHouse[8]; //warehouse
 extern Object metal[2];
 extern Object beacon[3];
+
+extern Pos CurrDest;
+
+extern int32_t metalNum;
 
 /* 计算部分 */
 

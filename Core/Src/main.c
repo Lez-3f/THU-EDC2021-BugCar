@@ -98,7 +98,7 @@ void setup(void) {
   gyro_init_default(&UART_GYRO);
   zigbee_Init(&huart3);
   HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_SET);
-  delay_ms(1000);
+  delay_ms(2000);
   HAL_GPIO_WritePin(pinLED_GPIO_Port, pinLED_Pin, GPIO_PIN_RESET);
   pwm_start();
   gyro_start();

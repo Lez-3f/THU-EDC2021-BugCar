@@ -3,6 +3,7 @@
 
 #include"value.h"
 
+#define TIMETOEND 900
 extern Pos carPos; //小车当前位置，由到信标距离算的
 
 void loop2();
