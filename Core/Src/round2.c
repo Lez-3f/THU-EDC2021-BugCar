@@ -42,7 +42,7 @@ void loop2()
 
         initWareHouse(); //初始化仓库类型
 
-        measureMetalPos0(ROUND_2); //测量金属位置
+        measureMetalPos0(); //测量金属位置
 
         // int32_t pointNo = 0;    //点的序号
         // int32_t whouseNo = wareHouse[1].type;   //信标的仓库类型
@@ -57,12 +57,17 @@ void loop2()
                 return;
             }
 
-            if (getGameTime() > 100 || getCarMineSumNum() == 10)
+            if (getGameTime() > 100)
             {
                 send2WareHouseLAZY();
             }
 
             measureMetalPos();
+
+            if(getCarMineSumNum() == 10)
+            {
+                send2WareHouseLAZY();
+            }
         }
 
         // int32_t i = 0;

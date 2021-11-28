@@ -105,6 +105,40 @@ void measureMetalPos()
     metal[1].x = m2.x, metal[1].y = m2.y;
 }
 
+bool turnAngle(float angle)
+{
+    setAngle(angle);
+    while (!isAngleCompleted())
+    {
+        if (!isEnable())
+        {
+            setSpeedStraight0();
+            setAngle(getRealAngle());
+            return false;
+        }
+        delay_ms(10);
+    } //转角度
+
+    return true;
+}
+
+bool goStraight(float speed, float distance)
+{
+    setSpeedStraight(speed, distance);
+    while (!isDisCompleted())
+    {
+        if (!isEnable())
+        {
+            setSpeedStraight0();
+            setAngle(getRealAngle());
+            return false;
+        }
+        delay_ms(10);
+    }
+
+    return true;
+}
+
 bool move(float angle, float distance, float speed)
 {
     setAngle(angle);
@@ -121,7 +155,7 @@ bool move(float angle, float distance, float speed)
 
     //(distance < 0) ? setSpeedStraight(-SPEED, -distance) : setSpeedStraight(SPEED, distance);
 
-    // setSpeedStraight(SPEED, distance);
+    setSpeedStraight(SPEED, distance);
 
     while (!isDisCompleted())
     {
@@ -148,25 +182,36 @@ void go2Point(Pos dest)
     float angle0 = getRealAngle(); //获取当前车身角度
 
     double relaAngle = -180 * atan2(relaPos.y, relaPos.x) / PI; //计算位移角度
-    float distance = sqrt(PW2(relaPos.x) + PW2(relaPos.y));     //小车的距离
+    //float distance = sqrt(PW2(relaPos.x) + PW2(relaPos.y));     //小车的距离
 
     float difAngle = ANGLE_NORM(relaAngle - angle0);
 
-    if (fabs(difAngle) > 90)
+    float angleturn = (fabs(difAngle) > 90) ? 180 + relaAngle : relaAngle;
+    if (!turnAngle(angleturn))
     {
-        if (!move(180 + relaAngle, distance, (float)(-SPEED)))
-        {
-            return;
-        }
-    }
+        return;
+    } //转一定角度
 
-    else
+    curPos = getCarPosByRound(); //更新当前坐标
+    float distance = sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y));     //小车与目标点的距离
+
+    float speed = (distance > 20) ? SPEED : SPEED_SLOW;
+    speed = (fabs(difAngle) > 90) ? -speed : speed;
+    if (!goStraight(speed, distance))
     {
-        if (!move(relaAngle, distance, (float)SPEED))
-        {
-            return;
-        }
-    }
+        return;
+    } //走到当前点
+    //未走到
+    curPos = getCarPosByRound();
+
+    HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+
+    // distance = sqrt(PW2(dest.x - curPos.x) + PW2(dest.y - curPos.y));     //小车与目标点的距离
+    // if(distance > 6){
+    //     HAL_GPIO_TogglePin(pinLED_GPIO_Port, pinLED_Pin);
+    //     go2Point(dest); //再次尝试
+    // }
+    
 }
 
 Pos calMetPos(int32_t S[3], Pos P[3])

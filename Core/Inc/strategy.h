@@ -43,6 +43,9 @@ void initWareHouse();
 
 bool move(float angle, float distance, float speed);
 
+bool turnAngle(float angle);    //转至设定角度角度
+bool goStraight(float speed, float destance);   //直走
+
 void measureMetalPos(); //第二回合才能用
 
 Pos getCarPosByRound(); //根据情况获得小车当前位置

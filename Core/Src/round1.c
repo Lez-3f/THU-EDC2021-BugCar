@@ -45,7 +45,7 @@ void loop1()
 
         initWareHouse(); //初始化仓库类型
 
-        measureMetalPos0(ROUND_1); //测量金属位置
+        measureMetalPos0(); //测量金属位置
 
         Object points[5];
         points[0] = metal[0], points[1] = metal[1];
